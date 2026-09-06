@@ -3,12 +3,489 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ESLFlow Admin</title>
+  <title>ESLFlow Seller Admin</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --accent:#f65f93;
+      --accent2:#ff8ab2;
+      --bg:#fff8fb;
+      --surface:#ffffff;
+      --text:#3e2632;
+      --muted:#7d6671;
+      --border:#ecd6df;
+      --success:#2fa66a;
+      --danger:#d95173;
+      --shadow:0 14px 35px rgba(93,40,64,.10);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+      background:linear-gradient(135deg,#fff8fb,#fff0f6);
+      color:var(--text);
+      min-height:100vh;
+      padding:24px;
+    }
+
+    .wrap{
+      width:min(760px,100%);
+      margin:0 auto;
+    }
+
+    .brand{
+      text-align:center;
+      margin-bottom:22px;
+    }
+
+    .brand h1{
+      margin:0;
+      color:var(--accent);
+      font-size:34px;
+    }
+
+    .brand p{
+      margin:6px 0 0;
+      color:var(--muted);
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    h2{
+      margin-top:0;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      margin-bottom:6px;
+      color:var(--muted);
+    }
+
+    input{
+      width:100%;
+      padding:12px 14px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      margin-bottom:14px;
+      font-size:15px;
+      outline:none;
+    }
+
+    input:focus{
+      border-color:var(--accent);
+    }
+
+    button{
+      border:0;
+      border-radius:10px;
+      padding:11px 16px;
+      font-weight:800;
+      cursor:pointer;
+      background:var(--accent);
+      color:white;
+    }
+
+    button.secondary{
+      background:#f4c4d5;
+      color:#6a2e49;
+    }
+
+    button.danger{
+      background:var(--danger);
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .row button{
+      flex:1;
+      min-width:150px;
+    }
+
+    .msg{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:10px;
+      display:none;
+      font-size:13px;
+    }
+
+    .msg.show{
+      display:block;
+    }
+
+    .msg.success{
+      background:#e5f8ed;
+      color:#236746;
+    }
+
+    .msg.error{
+      background:#ffe7ed;
+      color:#8d2948;
+    }
+
+    .hidden{
+      display:none!important;
+    }
+
+    .status{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+
+    .result{
+      margin-top:18px;
+      padding:14px;
+      border:1px dashed var(--accent);
+      border-radius:12px;
+      background:#fff7fa;
+      display:none;
+    }
+
+    .result.show{
+      display:block;
+    }
+
+    .result input{
+      margin:8px 0 10px;
+      font-family:monospace;
+      font-size:12px;
+    }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    @media(max-width:600px){
+      body{padding:14px}
+      .card{padding:16px}
+      .brand h1{font-size:27px}
+    }
+  </style>
 </head>
+
 <body>
 
-  <h1>ESLFlow Seller Admin</h1>
-  <p>Private admin page for creating Trial customer links.</p>
+<div class="wrap">
+
+  <div class="brand">
+    <h1>ESLFlow Seller Admin</h1>
+    <p>Private page for creating ₱50 Trial customer links.</p>
+  </div>
+
+  <div class="card" id="loginCard">
+    <h2>Admin Login</h2>
+
+    <label>Email</label>
+    <input id="loginEmail" type="email" placeholder="Your ESLFlow admin email">
+
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Your password">
+
+    <button id="loginBtn">Log In</button>
+
+    <div id="loginMsg" class="msg"></div>
+  </div>
+
+  <div class="card hidden" id="adminCard">
+    <h2>Create Trial Customer</h2>
+
+    <div id="adminStatus" class="status"></div>
+
+    <label>Customer Name</label>
+    <input id="customerName" type="text" placeholder="Example: Maria Santos">
+
+    <label>Customer Email</label>
+    <input id="customerEmail" type="email" placeholder="Example: maria@email.com">
+
+    <button id="createTrialBtn">Create Trial Link</button>
+
+    <div id="createMsg" class="msg"></div>
+
+    <div id="resultBox" class="result">
+      <strong>Trial link created ✅</strong>
+
+      <input id="trialLink" type="text" readonly>
+
+      <div class="row">
+        <button id="copyBtn">Copy Trial Link</button>
+        <button id="openBtn" class="secondary">Open Trial</button>
+      </div>
+
+      <p class="small">
+        Customer login is not required. The customer should keep this private link.
+        Their Trial allows up to 3 records per major section and a maximum of 3 resets.
+      </p>
+    </div>
+
+    <hr style="border:0;border-top:1px solid var(--border);margin:22px 0">
+
+    <button id="logoutBtn" class="danger">Log Out</button>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL =
+  "https://gnkuqadmwzatspcbmmpk.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_IcRsSNlMLbiyiiNwEkfXkw_KvmKc5EG";
+
+const ADMIN_FUNCTION_URL =
+  "https://gnkuqadmwzatspcbmmpk.supabase.co/functions/v1/eslflow-admin-create-trial";
+
+const sb = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true
+    }
+  }
+);
+
+const $ = id => document.getElementById(id);
+
+function showMsg(el,text,type){
+  el.textContent=text;
+  el.className="msg show "+type;
+}
+
+function hideMsg(el){
+  el.textContent="";
+  el.className="msg";
+}
+
+async function checkAdminSession(){
+  const { data:{ session } } = await sb.auth.getSession();
+
+  if(!session){
+    $("loginCard").classList.remove("hidden");
+    $("adminCard").classList.add("hidden");
+    return;
+  }
+
+  const { data:profile, error } = await sb
+    .from("profiles")
+    .select("plan,status")
+    .eq("user_id",session.user.id)
+    .maybeSingle();
+
+  if(
+    error ||
+    !profile ||
+    profile.plan !== "admin" ||
+    profile.status !== "active"
+  ){
+    await sb.auth.signOut();
+    $("loginCard").classList.remove("hidden");
+    $("adminCard").classList.add("hidden");
+    showMsg(
+      $("loginMsg"),
+      "This account does not have active admin access.",
+      "error"
+    );
+    return;
+  }
+
+  $("loginCard").classList.add("hidden");
+  $("adminCard").classList.remove("hidden");
+
+  $("adminStatus").textContent =
+    "Logged in as: " + session.user.email;
+}
+
+$("loginBtn").onclick = async () => {
+  hideMsg($("loginMsg"));
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  if(!email || !password){
+    showMsg(
+      $("loginMsg"),
+      "Enter your email and password.",
+      "error"
+    );
+    return;
+  }
+
+  $("loginBtn").disabled=true;
+  $("loginBtn").textContent="Logging in...";
+
+  const { error } = await sb.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  $("loginBtn").disabled=false;
+  $("loginBtn").textContent="Log In";
+
+  if(error){
+    showMsg(
+      $("loginMsg"),
+      error.message || "Login failed.",
+      "error"
+    );
+    return;
+  }
+
+  await checkAdminSession();
+};
+
+$("createTrialBtn").onclick = async () => {
+  hideMsg($("createMsg"));
+  $("resultBox").classList.remove("show");
+
+  const customerName =
+    $("customerName").value.trim();
+
+  const customerEmail =
+    $("customerEmail").value.trim();
+
+  if(!customerName || !customerEmail){
+    showMsg(
+      $("createMsg"),
+      "Enter the customer name and email.",
+      "error"
+    );
+    return;
+  }
+
+  const { data:{ session } } =
+    await sb.auth.getSession();
+
+  if(!session){
+    showMsg(
+      $("createMsg"),
+      "Your admin session expired. Please log in again.",
+      "error"
+    );
+    await checkAdminSession();
+    return;
+  }
+
+  $("createTrialBtn").disabled=true;
+  $("createTrialBtn").textContent="Creating...";
+
+  try{
+    const res = await fetch(
+      ADMIN_FUNCTION_URL,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":
+            "Bearer "+session.access_token,
+          "apikey":SUPABASE_PUBLISHABLE_KEY
+        },
+        body:JSON.stringify({
+          customer_name:customerName,
+          customer_email:customerEmail
+        })
+      }
+    );
+
+    const result = await res.json();
+
+    if(!res.ok){
+      throw new Error(
+        result.error || "Unable to create Trial."
+      );
+    }
+
+    $("trialLink").value =
+      result.trial_url || "";
+
+    $("resultBox").classList.add("show");
+
+    showMsg(
+      $("createMsg"),
+      "Trial created successfully.",
+      "success"
+    );
+
+  }catch(err){
+    showMsg(
+      $("createMsg"),
+      err.message || "Unable to create Trial.",
+      "error"
+    );
+  }
+
+  $("createTrialBtn").disabled=false;
+  $("createTrialBtn").textContent="Create Trial Link";
+};
+
+$("copyBtn").onclick = async () => {
+  const link = $("trialLink").value;
+
+  if(!link)return;
+
+  try{
+    await navigator.clipboard.writeText(link);
+    $("copyBtn").textContent="Copied ✓";
+
+    setTimeout(()=>{
+      $("copyBtn").textContent="Copy Trial Link";
+    },1500);
+
+  }catch{
+    $("trialLink").select();
+    document.execCommand("copy");
+  }
+};
+
+$("openBtn").onclick = () => {
+  const link = $("trialLink").value;
+
+  if(link){
+    window.open(
+      link,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+};
+
+$("logoutBtn").onclick = async () => {
+  await sb.auth.signOut();
+  location.reload();
+};
+
+sb.auth.onAuthStateChange(() => {
+  setTimeout(checkAdminSession,0);
+});
+
+checkAdminSession();
+</script>
 
 </body>
 </html>
