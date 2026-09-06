@@ -219,8 +219,8 @@
     <label>Customer Name</label>
     <input id="customerName" type="text" placeholder="Example: Maria Santos">
 
-    <label>Customer Email</label>
-    <input id="customerEmail" type="email" placeholder="Example: maria@email.com">
+    <label>Customer Email (Optional)</label>
+    <input id="customerEmail" type="email" placeholder="Optional: maria@email.com">
 
     <button id="createTrialBtn">Create Trial Link</button>
 
@@ -370,10 +370,10 @@ $("createTrialBtn").onclick = async () => {
   const customerEmail =
     $("customerEmail").value.trim();
 
-  if(!customerName || !customerEmail){
+  if(!customerName){
     showMsg(
       $("createMsg"),
-      "Enter the customer name and email.",
+      "Enter the customer name.",
       "error"
     );
     return;
