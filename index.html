@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ESLFlow Trial Demo</title>
+<title>ESLFlow Teacher Dashboard v1.0</title>
 <style>
 :root{
   --accent:#f65f93;
@@ -187,11 +187,11 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
   border-radius:8px;padding:8px 12px;text-align:center;font-size:11px
 }
 .week-wrap{overflow:auto;max-height:650px}
-.week-grid{min-width:1050px;display:grid;grid-template-columns:54px repeat(7,minmax(125px,1fr));grid-auto-rows:48px;position:relative}
+.week-grid{min-width:1050px;display:grid;grid-template-columns:54px repeat(7,minmax(125px,1fr));grid-auto-rows:96px;position:relative}
 .corner,.day-head,.time-cell,.slot{border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
 .corner{position:sticky;top:0;left:0;background:var(--surface);z-index:6}
 .day-head{position:sticky;top:0;z-index:5;background:var(--surface);text-align:center;font-weight:800;font-size:12px;padding:12px 6px;color:var(--accent)}
-.time-cell{position:sticky;left:0;z-index:4;background:var(--surface);font-size:11px;color:var(--muted);padding:17px 5px 0;text-align:right}
+.time-cell{position:sticky;left:0;z-index:4;background:var(--surface);font-size:11px;color:var(--muted);padding:40px 5px 0;text-align:right}
 .slot{position:relative;background:var(--surface)}.slot:hover{background:var(--surface-2)}
 .event{
   position:absolute;left:3px;right:3px;top:3px;border-radius:7px;
@@ -242,45 +242,36 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
   .card{box-shadow:none;border:0}.print-only{display:block}
 }
 
-.trial-banner{
-  position:sticky;top:0;z-index:50;background:#3c1630;color:#fff;
-  padding:10px 16px;display:flex;justify-content:space-between;align-items:center;
-  gap:12px;box-shadow:0 4px 14px rgba(0,0,0,.12)
+.event-tools{
+  position:absolute;right:4px;top:4px;display:flex;gap:3px;z-index:5
 }
-.trial-banner strong{font-size:14px}
-.trial-banner span{font-size:12px;opacity:.92}
-.trial-btn{
-  background:#fff;color:#7f2c58;border:0;border-radius:8px;
-  padding:8px 12px;font-weight:800
+.event-tool{
+  border:0;border-radius:5px;padding:2px 5px;font-size:10px;line-height:1.2;
+  background:rgba(255,255,255,.85);color:#5b3447;font-weight:800
 }
-.trial-note{
-  background:#fff6fa;border:1px solid #ffd1e1;border-radius:14px;
-  padding:12px 14px;margin-bottom:14px;font-size:12px;color:#734258;
+.lock-note{
+  margin-top:6px;font-size:10px;color:var(--muted);line-height:1.35
 }
-.trial-overlay{
-  position:fixed;inset:0;z-index:9999;background:rgba(40,18,32,.58);
-  display:none;align-items:center;justify-content:center;padding:18px
-}
-.trial-overlay.open{display:flex}
-.trial-card{
-  width:min(520px,100%);background:var(--surface);color:var(--text);
-  border:1px solid var(--border);border-radius:22px;padding:24px;
-  box-shadow:0 30px 80px rgba(0,0,0,.25)
-}
-.trial-card h2{margin:0 0 8px}.trial-card p{color:var(--muted);line-height:1.55}
-.trial-card .price{font-size:36px;font-weight:900;color:var(--accent);margin:10px 0}
-.trial-card .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.trial-card .actions .btn{flex:1;min-width:170px}
 
 
-.premium-view-note{
-  background:#fff7fa;border:1px dashed #f3a9c3;border-radius:12px;
-  padding:10px 12px;margin:0 0 14px;font-size:12px;color:#754057;
-}
-.full-only-tag{
-  margin-left:6px;background:rgba(255,255,255,.22);padding:2px 5px;
-  border-radius:999px;font-size:8px;font-weight:900;
-}
+/* ESLFlow Secure Login */
+body.auth-pending .app{display:none!important}
+.auth-shell{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#fff4f8,#ffe6ef)}
+.auth-shell.hidden{display:none}
+.auth-card{width:min(430px,100%);background:#fff;border:1px solid #f0ccd9;border-radius:24px;padding:28px;box-shadow:0 24px 70px rgba(126,48,82,.18)}
+.auth-logo{width:58px;height:58px;border-radius:17px;background:#f65f93;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;margin-bottom:14px}
+.auth-card h1{margin:0 0 6px;color:#492438}.auth-card p{margin:0 0 18px;color:#7d6671;line-height:1.5}
+.auth-card label{display:block;font-weight:800;font-size:12px;margin:12px 0 6px;color:#492438}
+.auth-card input{width:100%;padding:12px 13px;border:1px solid #e7cbd7;border-radius:12px;outline:none;background:#fff}
+.auth-card input:focus{border-color:#f65f93;box-shadow:0 0 0 3px #ffe7ef}
+.auth-primary{width:100%;border:0;border-radius:12px;padding:12px 14px;background:#f65f93;color:#fff;font-weight:900;margin-top:16px}
+.auth-msg{min-height:20px;margin-top:12px!important;font-size:12px!important}.auth-msg.error{color:#b42318}.auth-msg.ok{color:#16794f}
+.secure-account-box{margin-top:12px;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.16);font-size:10px;line-height:1.45}
+.secure-account-box button{margin-top:7px;width:100%;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:8px;padding:6px;font-weight:800}
+.plan-chip{display:inline-block;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.24);font-weight:900;text-transform:uppercase;letter-spacing:.4px}
+.cloud-status{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);padding:7px 10px;border-radius:999px;font-size:11px;color:var(--muted)}
+@media(max-width:700px){.cloud-status{bottom:72px}.auth-card{padding:22px}}
+
 </style>
 
 <style id="eslflow-mobile-reminder-css">
@@ -382,30 +373,22 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
 </style>
 
 </head>
-<body>
+<body class="auth-pending">
 
-<div class="trial-banner">
-  <div>
-    <strong>ESLFlow Trial Demo</strong>
-    <span> Create up to 3 students and up to 3 records in each major section.</span>
-  </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="trial-btn" onclick="resetTrial()">Reset Trial</button>
-    <button class="trial-btn" onclick="showTrialUpgrade()">Get Full Version — ₱299</button>
-  </div>
-</div>
-
-
-<div class="trial-overlay" id="trialOverlay">
-  <div class="trial-card">
-    <h2>You've reached the Trial limit 💗</h2>
-    <p>This trial lets you test ESLFlow with a small amount of real data. Upgrade to the Full Version to remove the limits and unlock premium tools.</p>
-    <div class="price">₱299</div>
-    <p><strong>One-time purchase • No monthly subscription</strong></p>
-    <div class="actions">
-      <button class="btn secondary" onclick="hideTrialUpgrade()">Continue Trial</button>
-      <button class="btn" onclick="purchaseInfo()">How to Purchase</button>
-    </div>
+<div class="auth-shell" id="authShell">
+  <div class="auth-card">
+    <div class="auth-logo">EF</div>
+    <h1>Welcome to ESLFlow</h1>
+    <p>Sign in to your licensed ESLFlow account. Trial and Full access are controlled by your account.</p>
+    <form id="loginForm">
+      <label for="loginEmail">Email address</label>
+      <input id="loginEmail" type="email" autocomplete="username" required placeholder="teacher@example.com">
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Your password">
+      <button class="auth-primary" type="submit" id="loginBtn">Sign in</button>
+      <p class="auth-msg" id="loginMsg"></p>
+    </form>
+    <p style="font-size:11px;margin-top:8px">Accounts are activated by ESLFlow after Trial or Full access is approved.</p>
   </div>
 </div>
 
@@ -433,11 +416,10 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
       <button class="nav-btn" data-page="backup">⇩ <span class="nav-label">Backup & Export</span></button>
       <button class="nav-btn" data-page="settings">⚙ <span class="nav-label">Settings</span></button>
     </nav>
-    <div class="sidebar-footer">Offline-first teacher dashboard.<br>Your data stays in this browser unless you export it.</div>
+    <div class="sidebar-footer">Secure account-based dashboard.<br><span id="accountEmail">Not signed in</span><br><span class="plan-chip" id="accountPlan">—</span><div class="secure-account-box"><span id="deviceLabel">Device protected</span><button id="logoutBtn" type="button">Sign out</button></div></div>
   </aside>
 
   <main class="main">
-<div class="trial-note"><strong>Trial limits:</strong> You may create up to <b>3 students</b>, <b>3 classes</b>, <b>3 attendance records</b>, <b>3 feedback records</b>, <b>3 payments</b>, <b>3 class records</b>, and <b>3 availability slots</b>. <b>Accent Color customization is enabled in the Trial.</b> Other Settings changes and Backup & Export actions remain Full Version features.</div>
     <section class="page active" id="dashboard">
       <div class="page-head">
         <div><h1 id="welcomeTitle">Teacher Dashboard</h1><p>Manage students, classes, income, feedback, and teaching records in one place.</p></div>
@@ -578,7 +560,7 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
       </div>
     </section>
 
-    <section class="page" id="backup"><div class="premium-view-note"><strong>Preview only:</strong> You can view Backup & Export tools in the Trial. Clicking any backup, restore, export, or print action will prompt you to upgrade to the Full Version.</div>
+    <section class="page" id="backup">
       <div class="page-head"><div><h1>Backup & Export</h1><p>Protect your data and export reports for your own records.</p></div><div class="clock"></div></div>
       <div class="grid-2">
         <div class="card">
@@ -610,17 +592,21 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
         </div>
       </div>
       <div class="card">
+        <h3>Before You Clear, Move, or Rename Anything</h3>
+        <p class="note"><b>Important:</b> Your working records are stored in browser storage. Export a Full Backup before clearing browser/site data, changing browser profiles, moving to another computer, or renaming/moving the dashboard file. Some browsers can treat a moved local HTML file as a different storage context.</p>
+      </div>
+      <div class="card">
         <h3>Data Safety Reminder</h3>
         <p class="note">This offline edition stores data in the browser. Export a backup regularly, especially before clearing browser data or moving to another computer.</p>
       </div>
     </section>
 
-    <section class="page" id="settings"><div class="premium-view-note"><strong>Trial customization:</strong> You can change and save the <b>Accent Color</b>. Other Settings options are preview-only and require the Full Version.</div>
+    <section class="page" id="settings">
       <div class="page-head"><div><h1>Settings</h1><p>Customize this dashboard for your own teaching business.</p></div><div class="clock"></div></div>
       <div class="setup-grid">
         <div class="hero">
           <h2>Make it yours.</h2>
-          <p>Try changing the <b>Accent Color</b> in the Trial. Dashboard name, teacher name, theme, currency, timezone, and other customization options are available in the Full Version.</p>
+          <p>Customize the dashboard name, teacher name, accent color, theme, currency, and defaults.</p>
           <div class="checklist">
             <div class="check">✓ Works offline in a browser</div>
             <div class="check">✓ Export and restore backups</div>
@@ -630,14 +616,14 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
         </div>
         <div class="card">
           <div class="form-grid">
-            <div class="full"><label>Dashboard Name</label><input id="setBrand" readonly title="Full Version feature"></div>
-            <div class="full"><label>Tagline</label><input id="setTagline" readonly title="Full Version feature"></div>
-            <div><label>Teacher Name</label><input id="setTeacher" readonly title="Full Version feature"></div>
-            <div><label>Currency Symbol</label><input id="setCurrency" maxlength="4" readonly title="Full Version feature"></div>
-            <div><label>Default Timezone</label><select id="setTimezone" title="Full Version feature"><option>Asia/Manila</option><option>Asia/Tokyo</option><option>Asia/Seoul</option><option>Asia/Shanghai</option><option>Europe/London</option><option>America/New_York</option></select></div>
-            <div><label>Theme</label><select id="setTheme" title="Full Version feature"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+            <div class="full"><label>Dashboard Name</label><input id="setBrand"></div>
+            <div class="full"><label>Tagline</label><input id="setTagline"></div>
+            <div><label>Teacher Name</label><input id="setTeacher"></div>
+            <div><label>Currency Symbol</label><input id="setCurrency" maxlength="4"></div>
+            <div><label>Default Timezone</label><select id="setTimezone"><option>Asia/Manila</option><option>Asia/Tokyo</option><option>Asia/Seoul</option><option>Asia/Shanghai</option><option>Europe/London</option><option>America/New_York</option></select></div>
+            <div><label>Theme</label><select id="setTheme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
             <div class="full">
-              <label>Accent Color <span style="font-size:11px;color:var(--accent);font-weight:800">✓ Available in Trial</span></label>
+              <label>Accent Color</label>
               <div class="swatches">
                 <button class="swatch" style="background:#f65f93" data-color="#f65f93"></button>
                 <button class="swatch" style="background:#7c5cff" data-color="#7c5cff"></button>
@@ -646,7 +632,7 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
                 <button class="swatch" style="background:#2f80ed" data-color="#2f80ed"></button>
               </div>
             </div>
-            <div class="full"><button class="btn" id="saveSettings">Save Other Settings <span style="font-size:11px">🔒 Full</span></button></div>
+            <div class="full"><button class="btn" id="saveSettings">Save Settings</button></div>
           </div>
         </div>
       </div>
@@ -675,7 +661,7 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
 <script>
 const DEFAULTS={
   settings:{
-    brand:"ESLFlow Trial",
+    brand:"ESLFlow",
     tagline:"Teach • Track • Grow",
     teacher:"Teacher",
     currency:"₱",
@@ -693,8 +679,7 @@ const DEFAULTS={
   records:[]
 };
 
-let data=JSON.parse(localStorage.getItem("eslflow_sellable_v1")||"null");
-if(!data)data=structuredClone(DEFAULTS);
+let data=structuredClone(DEFAULTS);
 Object.keys(DEFAULTS).forEach(k=>{if(data[k]===undefined)data[k]=structuredClone(DEFAULTS[k])});
 if(!data.settings)data.settings=structuredClone(DEFAULTS.settings);
 
@@ -702,7 +687,11 @@ let modalMode=null,editId=null;
 let weekStart=getMonday(new Date());
 
 const $=id=>document.getElementById(id);
-function save(){localStorage.setItem("eslflow_sellable_v1",JSON.stringify(data));renderAll()}
+function save(){
+  try{if(window.ESLFlowSecure) window.ESLFlowSecure.cache(data)}catch(_){ }
+  renderAll();
+  try{if(window.ESLFlowSecure) window.ESLFlowSecure.queueCloudSave(data)}catch(_){ }
+}
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function cur(n){return (data.settings.currency||"₱")+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 function uid(prefix){return prefix+"-"+Date.now()+"-"+Math.random().toString(16).slice(2,6)}
@@ -908,6 +897,31 @@ function viewStudent(id){
 }
 window.viewStudent=viewStudent;
 window.openStudentModal=openStudentModal;
+
+openClassModal=function(){
+  if(!data.students.length)return alert("Add a student first.");
+  const first=data.students[0];
+  openModal("Add Class",`<div class="form-grid">
+    <div><label>Student</label><select id="fClassStudent">${studentOptions(first.id)}</select></div>
+    <div><label>Date</label><input id="fClassDate" type="date" value="${todayISO()}"></div>
+    <div><label>Start Time</label><input id="fClassTime" type="time" value="10:00"></div>
+    <div><label>Duration</label><select id="fClassDuration">${[25,30,40,45,50,60].map(x=>`<option value="${x}" ${Number(first.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}<option value="90">90 minutes</option><option value="120">120 minutes</option></select></div>
+    <div><label>Status</label><select id="fClassStatus"><option>Booked</option><option>Completed</option><option>Cancelled</option><option>No Show</option></select></div>
+    <div><label>Lesson / Topic</label><input id="fClassLesson"></div>
+    <div><label>Recurring</label><select id="fRecurring"><option value="none">No</option><option value="weekly">Weekly</option></select></div>
+    <div><label>Repeat Count</label><input id="fRepeatCount" type="number" min="1" max="52" value="4"></div>
+    <div class="full"><label>Class Link / Room Note</label><input id="fClassLink"></div>
+  </div>`,"class-add");
+  const studentSel=$("fClassStudent"), durationSel=$("fClassDuration");
+  studentSel.onchange=()=>{
+    const s=studentById(studentSel.value);
+    if(!s)return;
+    const wanted=String(Number(s.duration||25));
+    if([...durationSel.options].some(o=>o.value===wanted)) durationSel.value=wanted;
+  };
+};
+window.openClassModal=openClassModal;
+
 window.openFeedbackModal=openFeedbackModal;
 window.openClassModal=openClassModal;
 window.openAvailabilityModal=openAvailabilityModal;
@@ -1069,11 +1083,7 @@ $("printFeedbackBtn").onclick=()=>{
 function loadSettingsUI(){
   $("setBrand").value=data.settings.brand;$("setTagline").value=data.settings.tagline;$("setTeacher").value=data.settings.teacher;$("setCurrency").value=data.settings.currency;$("setTimezone").value=data.settings.timezone;$("setTheme").value=data.settings.theme
 }
-document.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{
-  data.settings.accent=b.dataset.color;
-  localStorage.setItem("eslflow_trial_demo_v1",JSON.stringify(data));
-  applySettings();
-});
+document.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{data.settings.accent=b.dataset.color;applySettings()});
 $("saveSettings").onclick=()=>{
   data.settings.brand=$("setBrand").value.trim()||"ESLFlow";
   data.settings.tagline=$("setTagline").value.trim()||"Teach • Track • Grow";
@@ -1091,450 +1101,501 @@ renderAll();
 </script>
 
 <script>
-/* ESLFlow Trial Demo */
-const TRIAL_KEY = "eslflow_trial_demo_v1";
-const TRIAL_LIMITS = {
-  students:3,
-  classes:3,
-  availability:3,
-  attendance:3,
-  feedback:3,
-  payments:3,
-  records:3
+/* ESLFlow v1.0 final reliability fixes */
+
+function normalizeData(){
+  const keys=["classes","availability","attendance","feedback","payments","records"];
+  const prefixes={classes:"CLS",availability:"AVL",attendance:"ATT",feedback:"FB",payments:"PAY",records:"REC"};
+  keys.forEach(k=>{
+    if(!Array.isArray(data[k])) data[k]=[];
+    data[k].forEach(x=>{ if(!x.id) x.id=uid(prefixes[k]); });
+  });
+  if(!Array.isArray(data.students)) data.students=[];
+  if(!Array.isArray(data.platforms)) data.platforms=[];
+}
+normalizeData();
+
+function propagateStudentSnapshot(studentId,newName,newPlatform){
+  ["classes","attendance","feedback","payments","records"].forEach(key=>{
+    (data[key]||[]).forEach(r=>{
+      if(r.studentId===studentId){
+        r.student=newName;
+        if("platform" in r || key!=="records") r.platform=newPlatform;
+      }
+    });
+  });
+}
+
+openStudentModal=function(id=null){
+  const s=id?studentById(id):{};
+  let n=data.students.length+1, next="";
+  do{ next="STU-"+String(n++).padStart(3,"0"); }while(data.students.some(x=>x.id===next));
+  openModal(id?"Edit Student":"Add Student",`<div class="form-grid">
+    <div><label>Name</label><input id="fName" value="${esc(s.name||"")}"></div>
+    <div><label>Student ID</label>
+      <input id="fId" value="${esc(s.id||next)}" ${id?"readonly":""}>
+      ${id?'<div class="lock-note">Student ID is locked after creation so attendance, feedback, payments, class records, and schedules stay connected correctly.</div>':""}
+    </div>
+    <div><label>Platform</label><select id="fPlatform">${platformOptions(s.platform)}</select></div>
+    <div><label>Country</label><input id="fCountry" value="${esc(s.country||"")}"></div>
+    <div><label>Timezone</label><select id="fTimezone">${["Asia/Manila","Asia/Tokyo","Asia/Seoul","Asia/Shanghai","Asia/Bangkok","Asia/Singapore","Europe/London","America/New_York","America/Los_Angeles","Australia/Sydney"].map(x=>`<option ${x===s.timezone?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>English Level</label><select id="fLevel">${["Beginner","Elementary","Pre-Intermediate","Intermediate","Upper-Intermediate","Advanced"].map(x=>`<option ${x===s.level?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>Subject / Focus</label><select id="fSubject">${["Conversational English","Speaking","Grammar","Pronunciation","Phonics","Reading","Writing","IELTS","TOEFL","Business English","Kids English","General English","Other"].map(x=>`<option ${x===s.subject?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>Class Duration</label><select id="fDuration">${[25,30,40,45,50,60].map(x=>`<option value="${x}" ${Number(s.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}</select></div>
+    <div><label>Rate per Class</label><input id="fRate" type="number" step=".01" value="${s.rate??100}"></div>
+    <div><label>Status</label><select id="fStudentStatus">${["Active","Trial","Paused","Inactive"].map(x=>`<option ${x===(s.status||"Active")?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>Start Date</label><input id="fStartDate" type="date" value="${esc(s.startDate||"")}"></div>
+    <div><label>End Date</label><input id="fEndDate" type="date" value="${esc(s.endDate||"")}"></div>
+    <div><label>Parent / Guardian</label><input id="fGuardian" value="${esc(s.guardian||"")}"></div>
+    <div><label>Contact / Email</label><input id="fContact" value="${esc(s.contact||"")}"></div>
+    <div class="full"><label>Learning Goal</label><textarea id="fGoal" rows="3">${esc(s.goal||"")}</textarea></div>
+    <div class="full"><label>Notes</label><textarea id="fNotes" rows="3">${esc(s.notes||"")}</textarea></div>
+  </div>`,id?"student-edit":"student-add",id)
+};
+window.openStudentModal=openStudentModal;
+
+function deleteStudent(id){
+  const s=studentById(id);
+  if(!s)return;
+  const related={
+    classes:data.classes.filter(x=>x.studentId===id).length,
+    attendance:data.attendance.filter(x=>x.studentId===id).length,
+    feedback:data.feedback.filter(x=>x.studentId===id).length,
+    payments:data.payments.filter(x=>x.studentId===id).length,
+    records:data.records.filter(x=>x.studentId===id).length
+  };
+  const total=Object.values(related).reduce((a,b)=>a+b,0);
+  const msg=total
+    ? `Delete ${s.name}? This student has ${total} linked record(s). The student profile will be deleted, but historical records will remain so your teaching and payment history is not erased.`
+    : `Delete ${s.name}?`;
+  if(confirm(msg)){ data.students=data.students.filter(x=>x.id!==id); save(); }
+}
+window.deleteStudent=deleteStudent;
+
+function openClassEditModal(id){
+  const c=data.classes.find(x=>x.id===id); if(!c)return;
+  openModal("Edit Class",`<div class="form-grid">
+    <div><label>Student</label><select id="fClassStudent">${studentOptions(c.studentId)}</select></div>
+    <div><label>Date</label><input id="fClassDate" type="date" value="${esc(c.date)}"></div>
+    <div><label>Start Time</label><input id="fClassTime" type="time" value="${esc(c.time)}"></div>
+    <div><label>Duration</label><select id="fClassDuration">${[25,30,40,45,50,60,90,120].map(x=>`<option value="${x}" ${Number(c.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}${![25,30,40,45,50,60,90,120].includes(Number(c.duration||25))?`<option value="${Number(c.duration||25)}" selected>${Number(c.duration||25)} minutes</option>`:""}</select></div>
+    <div><label>Status</label><select id="fClassStatus">${["Booked","Completed","Cancelled","No Show"].map(x=>`<option ${x===c.status?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>Lesson / Topic</label><input id="fClassLesson" value="${esc(c.lesson||"")}"></div>
+    <div class="full"><label>Class Link / Room Note</label><input id="fClassLink" value="${esc(c.link||"")}"></div>
+    <div class="full"><div class="note">Editing a recurring class changes only this occurrence.</div></div>
+  </div>`,"class-edit",id);
+}
+function deleteClass(id){
+  const c=data.classes.find(x=>x.id===id); if(!c)return;
+  if(confirm(`Delete ${c.student}'s class on ${c.date} at ${c.time}?`)){data.classes=data.classes.filter(x=>x.id!==id);save()}
+}
+window.openClassEditModal=openClassEditModal;
+window.deleteClass=deleteClass;
+
+function openAvailabilityEditModal(id){
+  const a=data.availability.find(x=>x.id===id); if(!a)return;
+  openModal("Edit Availability",`<div class="form-grid">
+    <div><label>Date</label><input id="fAvailDate" type="date" value="${esc(a.date)}"></div>
+    <div><label>Status</label><select id="fAvailStatus">${["Available","Blocked"].map(x=>`<option ${x===a.status?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>Start Time</label><input id="fAvailStart" type="time" value="${esc(a.start)}"></div>
+    <div><label>End Time</label><input id="fAvailEnd" type="time" value="${esc(a.end)}"></div>
+  </div>`,"availability-edit",id);
+}
+function deleteAvailability(id){
+  const a=data.availability.find(x=>x.id===id);if(!a)return;
+  if(confirm(`Delete this ${a.status.toLowerCase()} slot on ${a.date}, ${a.start}-${a.end}?`)){data.availability=data.availability.filter(x=>x.id!==id);save()}
+}
+window.openAvailabilityEditModal=openAvailabilityEditModal;
+window.deleteAvailability=deleteAvailability;
+
+function openAttendanceEditModal(id){
+  const a=data.attendance.find(x=>x.id===id);if(!a)return;
+  openModal("Edit Attendance",`<div class="form-grid">
+    <div><label>Student</label><select id="fAttStudent">${studentOptions(a.studentId)}</select></div>
+    <div><label>Date</label><input id="fAttDate" type="date" value="${esc(a.date)}"></div>
+    <div><label>Class Time</label><input id="fAttTime" type="time" value="${esc(a.time)}"></div>
+    <div><label>Status</label><select id="fAttStatus">${["Present","Absent","Late","Cancelled","No Show"].map(x=>`<option ${x===a.status?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div class="full"><label>Notes</label><textarea id="fAttNotes" rows="3">${esc(a.notes||"")}</textarea></div>
+  </div>`,"attendance-edit",id)
+}
+function openFeedbackEditModal(id){
+  const f=data.feedback.find(x=>x.id===id);if(!f)return;
+  openModal("Edit Feedback",`<div class="form-grid">
+    <div><label>Student Name</label><select id="fFbStudent">${studentOptions(f.studentId)}</select></div>
+    <div><label>Subject</label><select id="fFbSubject">${["Speaking","Grammar","Pronunciation","Phonics","Reading","Writing","Listening","Vocabulary","Conversational English","Business English","IELTS","TOEFL","General English","Other"].map(x=>`<option ${x===f.subject?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div><label>Date</label><input id="fFbDate" type="date" value="${esc(f.date)}"></div>
+    <div><label>Overall Rating</label><select id="fFbRating">${["Excellent","Very Good","Good","Needs Improvement"].map(x=>`<option ${x===f.rating?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div class="full"><label>Strength</label><textarea id="fFbStrength" rows="3">${esc(f.strength||"")}</textarea></div>
+    <div class="full"><label>Weakness</label><textarea id="fFbWeakness" rows="3">${esc(f.weakness||"")}</textarea></div>
+    <div class="full"><label>Areas to Improve</label><textarea id="fFbImprove" rows="3">${esc(f.improve||"")}</textarea></div>
+    <div class="full"><label>Teacher Comment</label><textarea id="fFbComment" rows="3">${esc(f.comment||"")}</textarea></div>
+  </div>`,"feedback-edit",id)
+}
+function openPaymentEditModal(id){
+  const p=data.payments.find(x=>x.id===id);if(!p)return;
+  openModal("Edit Payment",`<div class="form-grid">
+    <div><label>Student</label><select id="fPayStudent">${studentOptions(p.studentId)}</select></div>
+    <div><label>Date</label><input id="fPayDate" type="date" value="${esc(p.date)}"></div>
+    <div><label>Amount</label><input id="fPayAmount" type="number" step=".01" value="${Number(p.amount||0)}"></div>
+    <div><label>Status</label><select id="fPayStatus">${["Paid","Pending"].map(x=>`<option ${x===p.status?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div class="full"><label>Notes</label><textarea id="fPayNotes" rows="3">${esc(p.notes||"")}</textarea></div>
+  </div>`,"payment-edit",id)
+}
+function openRecordEditModal(id){
+  const r=data.records.find(x=>x.id===id);if(!r)return;
+  openModal("Edit Class Record",`<div class="form-grid">
+    <div><label>Student</label><select id="fRecStudent">${studentOptions(r.studentId)}</select></div>
+    <div><label>Date</label><input id="fRecDate" type="date" value="${esc(r.date)}"></div>
+    <div class="full"><label>Lesson / Material</label><input id="fRecLesson" value="${esc(r.lesson||"")}"></div>
+    <div class="full"><label>Progress / Teacher Notes</label><textarea id="fRecNotes" rows="4">${esc(r.notes||"")}</textarea></div>
+    <div class="full"><label>Homework / Next Step</label><textarea id="fRecHomework" rows="3">${esc(r.homework||"")}</textarea></div>
+  </div>`,"record-edit",id)
+}
+window.openAttendanceEditModal=openAttendanceEditModal;
+window.openFeedbackEditModal=openFeedbackEditModal;
+window.openPaymentEditModal=openPaymentEditModal;
+window.openRecordEditModal=openRecordEditModal;
+
+function updateOrPush(key,obj,id){
+  if(id){
+    const i=data[key].findIndex(x=>x.id===id);
+    if(i>=0)data[key][i]=obj;
+  }else data[key].push(obj);
+}
+
+$("saveModal").onclick=()=>{
+  if(modalMode==="view"){ $("modal").classList.remove("open"); return; }
+
+  if(["student-add","student-edit"].includes(modalMode)){
+    const original=modalMode==="student-edit"?studentById(editId):null;
+    const obj={
+      name:$("fName").value.trim(),
+      id:modalMode==="student-edit"?editId:$("fId").value.trim(),
+      platform:$("fPlatform").value,
+      country:$("fCountry").value.trim(),
+      timezone:$("fTimezone").value,
+      level:$("fLevel").value,
+      subject:$("fSubject").value,
+      duration:+$("fDuration").value||25,
+      rate:+$("fRate").value||0,
+      status:$("fStudentStatus").value,
+      startDate:$("fStartDate").value,
+      endDate:$("fEndDate").value,
+      guardian:$("fGuardian").value.trim(),
+      contact:$("fContact").value.trim(),
+      goal:$("fGoal").value.trim(),
+      notes:$("fNotes").value.trim()
+    };
+    if(!obj.name||!obj.id)return alert("Name and Student ID are required.");
+    if(modalMode==="student-add"){
+      if(data.students.some(x=>x.id===obj.id))return alert("Student ID already exists.");
+      data.students.push(obj);
+    }else{
+      const i=data.students.findIndex(x=>x.id===editId);
+      if(i>=0){
+        data.students[i]=obj;
+        propagateStudentSnapshot(editId,obj.name,obj.platform);
+      }
+    }
+  }
+
+  if(["class-add","class-edit"].includes(modalMode)){
+    const s=studentById($("fClassStudent").value);if(!s)return alert("Please choose an existing student.");
+    const base={
+      id:modalMode==="class-edit"?editId:uid("CLS"),
+      studentId:s.id,student:s.name,platform:s.platform,
+      date:$("fClassDate").value,time:$("fClassTime").value,
+      duration:+$("fClassDuration").value||25,status:$("fClassStatus").value,
+      lesson:$("fClassLesson").value.trim(),link:$("fClassLink").value.trim()
+    };
+    if(!base.date||!base.time)return alert("Date and start time are required.");
+    if(!Number.isFinite(base.duration)||base.duration<5||base.duration>240)return alert("Class duration must be between 5 and 240 minutes.");
+    if(modalMode==="class-edit") updateOrPush("classes",base,editId);
+    else{
+      data.classes.push(base);
+      if($("fRecurring") && $("fRecurring").value==="weekly"){
+        const count=Math.max(1,Math.min(52,+$("fRepeatCount").value||4));
+        const d=new Date(base.date+"T00:00:00");
+        for(let i=1;i<count;i++) data.classes.push({...base,id:uid("CLS"),date:isoDate(addDays(d,i*7))});
+      }
+    }
+  }
+
+  if(["availability-add","availability-edit"].includes(modalMode)){
+    const obj={id:modalMode==="availability-edit"?editId:uid("AVL"),date:$("fAvailDate").value,start:$("fAvailStart").value,end:$("fAvailEnd").value,status:$("fAvailStatus").value};
+    if(!obj.date||!obj.start||!obj.end)return alert("Date, start time, and end time are required.");
+    if(obj.end<=obj.start)return alert("End time must be later than start time.");
+    updateOrPush("availability",obj,modalMode==="availability-edit"?editId:null);
+  }
+
+  if(["attendance-add","attendance-edit"].includes(modalMode)){
+    const s=studentById($("fAttStudent").value);if(!s)return alert("Please choose an existing student.");
+    const obj={id:modalMode==="attendance-edit"?editId:uid("ATT"),studentId:s.id,student:s.name,platform:s.platform,date:$("fAttDate").value,time:$("fAttTime").value,status:$("fAttStatus").value,notes:$("fAttNotes").value.trim()};
+    updateOrPush("attendance",obj,modalMode==="attendance-edit"?editId:null);
+  }
+
+  if(["feedback-add","feedback-edit"].includes(modalMode)){
+    const s=studentById($("fFbStudent").value);if(!s)return alert("Please choose an existing student.");
+    const obj={id:modalMode==="feedback-edit"?editId:uid("FB"),studentId:s.id,student:s.name,platform:s.platform,subject:$("fFbSubject").value,date:$("fFbDate").value,rating:$("fFbRating").value,strength:$("fFbStrength").value.trim(),weakness:$("fFbWeakness").value.trim(),improve:$("fFbImprove").value.trim(),comment:$("fFbComment").value.trim()};
+    updateOrPush("feedback",obj,modalMode==="feedback-edit"?editId:null);
+  }
+
+  if(modalMode==="platform-add"){
+    const p=$("fPlatformName").value.trim();
+    if(!p)return alert("Enter a platform name.");
+    if(data.platforms.some(x=>x.toLowerCase()===p.toLowerCase()))return alert("That platform already exists.");
+    data.platforms.push(p);
+  }
+
+  if(["payment-add","payment-edit"].includes(modalMode)){
+    const s=studentById($("fPayStudent").value);if(!s)return alert("Please choose an existing student.");
+    const obj={id:modalMode==="payment-edit"?editId:uid("PAY"),studentId:s.id,student:s.name,platform:s.platform,date:$("fPayDate").value,amount:+$("fPayAmount").value||0,status:$("fPayStatus").value,notes:$("fPayNotes").value.trim()};
+    if(obj.amount<0)return alert("Amount cannot be negative.");
+    updateOrPush("payments",obj,modalMode==="payment-edit"?editId:null);
+  }
+
+  if(["record-add","record-edit"].includes(modalMode)){
+    const s=studentById($("fRecStudent").value);if(!s)return alert("Please choose an existing student.");
+    const obj={id:modalMode==="record-edit"?editId:uid("REC"),studentId:s.id,student:s.name,platform:s.platform,date:$("fRecDate").value,lesson:$("fRecLesson").value.trim(),notes:$("fRecNotes").value.trim(),homework:$("fRecHomework").value.trim()};
+    updateOrPush("records",obj,modalMode==="record-edit"?editId:null);
+  }
+
+  $("modal").classList.remove("open");
+  save();
 };
 
-function showTrialUpgrade(){
-  const el=document.getElementById("trialOverlay");
-  if(el) el.classList.add("open");
-}
-function hideTrialUpgrade(){
-  const el=document.getElementById("trialOverlay");
-  if(el) el.classList.remove("open");
-}
-function purchaseInfo(){
-  alert("ESLFlow Full Version is ₱299 as a one-time purchase. Connect this button to your checkout or payment/contact page before launch.");
-}
-function resetTrial(){
-  if(confirm("Reset the trial and erase all trial data?")){
-    localStorage.removeItem(TRIAL_KEY);
-    location.reload();
-  }
-}
-window.showTrialUpgrade=showTrialUpgrade;
-window.hideTrialUpgrade=hideTrialUpgrade;
-window.purchaseInfo=purchaseInfo;
-window.resetTrial=resetTrial;
+renderStudents=function(){
+  const q=$("studentSearch").value.toLowerCase(),pf=$("studentPlatformFilter").value,lf=$("studentLevelFilter").value,sf=$("studentStatusFilter").value;
+  const list=data.students.filter(s=>(s.name+s.id+s.country+s.subject+s.platform).toLowerCase().includes(q)&&(!pf||s.platform===pf)&&(!lf||s.level===lf)&&(!sf||s.status===sf));
+  $("studentsBody").innerHTML=list.length?list.map(s=>`<tr>
+    <td><strong>${esc(s.name)}</strong><br><small>${esc(s.id)}</small></td>
+    <td><span class="badge">${esc(s.platform)}</span></td><td>${esc(s.country)}</td><td>${esc(s.level)}</td><td>${esc(s.subject)}</td>
+    <td>${cur(s.rate)}</td><td>${statusBadge(s.status)}</td>
+    <td>
+      <button class="action view" onclick="viewStudent('${esc(s.id)}')">View</button>
+      <button class="action edit" onclick="openStudentModal('${esc(s.id)}')">Edit</button>
+      <button class="action feedback" onclick="openFeedbackModal('${esc(s.id)}')">Feedback</button>
+      <button class="action delete" onclick="deleteStudent('${esc(s.id)}')">Delete</button>
+    </td>
+  </tr>`).join(""):`<tr><td colspan="8" class="empty">No students found.</td></tr>`;
+};
 
-(function(){
-  /* Separate trial storage from the paid/full dashboard storage. */
-  const originalSave = window.save;
-  if(typeof data !== "undefined"){
-    const stored = localStorage.getItem(TRIAL_KEY);
-    if(stored){
-      try{ data = JSON.parse(stored); }catch(e){}
-    } else {
-      /* Start clean for the customer's own trial data. */
-      data = JSON.parse(JSON.stringify(DEFAULTS));
-      data.students=[];
-      data.classes=[];
-      data.availability=[];
-      data.attendance=[];
-      data.feedback=[];
-      data.payments=[];
-      data.records=[];
-      localStorage.setItem(TRIAL_KEY,JSON.stringify(data));
-    }
-  }
+renderAttendance=function(){
+  $("attendanceBody").innerHTML=data.attendance.length?data.attendance.slice().reverse().map(a=>`<tr>
+    <td>${esc(a.student)}</td><td>${esc(a.date)}</td><td>${esc(a.time)}</td><td>${statusBadge(a.status)}</td><td>${esc(a.platform)}</td><td>${esc(a.notes)}</td>
+    <td><button class="action edit" onclick="openAttendanceEditModal('${a.id}')">Edit</button><button class="action delete" onclick="delFrom('attendance','${a.id}','attendance record')">Delete</button></td>
+  </tr>`).join(""):`<tr><td colspan="7" class="empty">No attendance records yet.</td></tr>`;
+};
 
-  window.save = function(){
-    localStorage.setItem(TRIAL_KEY,JSON.stringify(data));
-    if(typeof renderAll==="function") renderAll();
-  };
-  save = window.save;
+renderFeedback=function(){
+  $("feedbackBody").innerHTML=data.feedback.length?data.feedback.slice().reverse().map(f=>`<tr>
+    <td>${esc(f.student)}</td><td>${esc(f.subject)}</td><td>${esc(f.date)}</td><td>${esc(f.strength)}</td><td>${esc(f.weakness)}</td><td>${esc(f.improve)}</td><td>${esc(f.rating)}</td>
+    <td><button class="action edit" onclick="openFeedbackEditModal('${f.id}')">Edit</button><button class="action delete" onclick="delFrom('feedback','${f.id}','feedback')">Delete</button></td>
+  </tr>`).join(""):`<tr><td colspan="8" class="empty">No feedback records yet.</td></tr>`;
+};
 
-  function atLimit(key){
-    return Array.isArray(data[key]) && data[key].length >= TRIAL_LIMITS[key];
-  }
+renderPayments=function(){
+  const m=$("paymentMonth").value,s=$("paymentStatusFilter").value;
+  const list=data.payments.filter(p=>(!m||monthKey(p.date)===m)&&(!s||p.status===s));
+  $("paymentsBody").innerHTML=list.length?list.slice().reverse().map(p=>`<tr>
+    <td>${esc(p.student)}</td><td>${esc(p.platform)}</td><td>${esc(p.date)}</td><td>${cur(p.amount)}</td><td>${statusBadge(p.status)}</td><td>${esc(p.notes)}</td>
+    <td><button class="action edit" onclick="openPaymentEditModal('${p.id}')">Edit</button><button class="action delete" onclick="delFrom('payments','${p.id}','payment')">Delete</button></td>
+  </tr>`).join(""):`<tr><td colspan="7" class="empty">No payments found.</td></tr>`;
+};
 
-  function blockIfLimit(key){
-    if(atLimit(key)){
-      showTrialUpgrade();
-      return true;
-    }
-    return false;
+renderRecords=function(){
+  $("recordsBody").innerHTML=data.records.length?data.records.slice().reverse().map(r=>`<tr>
+    <td>${esc(r.student)}</td><td>${esc(r.date)}</td><td>${esc(r.lesson)}</td><td>${esc(r.notes)}</td><td>${esc(r.homework)}</td>
+    <td><button class="action edit" onclick="openRecordEditModal('${r.id}')">Edit</button><button class="action delete" onclick="delFrom('records','${r.id}','class record')">Delete</button></td>
+  </tr>`).join(""):`<tr><td colspan="6" class="empty">No class records yet.</td></tr>`;
+};
+
+renderCalendar=function(){
+  const end=addDays(weekStart,6);
+  const weekStartISO=isoDate(weekStart), weekEndISO=isoDate(end);
+  $("weekTitle").textContent=fmtRange(weekStart,end);$("weekGrid").innerHTML="";
+  const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  $("weekGrid").insertAdjacentHTML("beforeend",`<div class="corner"></div>`);
+  for(let d=0;d<7;d++){
+    const date=addDays(weekStart,d);
+    $("weekGrid").insertAdjacentHTML("beforeend",`<div class="day-head">${days[d]}, ${date.toLocaleDateString("en-US",{month:"2-digit",day:"2-digit"})}</div>`)
   }
 
-  const originals = {};
+  // Default to a practical ESL-teaching window, but automatically expand for early/late classes.
+  const weekClasses=data.classes.filter(c=>c.date>=weekStartISO&&c.date<=weekEndISO);
+  const weekAvail=data.availability.filter(a=>a.date>=weekStartISO&&a.date<=weekEndISO);
+  const starts=[...weekClasses.map(c=>Number((c.time||"06:00").split(":")[0])),...weekAvail.map(a=>Number((a.start||"06:00").split(":")[0]))].filter(Number.isFinite);
+  const ends=[...weekClasses.map(c=>{
+    const [h,m]=(c.time||"00:00").split(":").map(Number);return Math.ceil((h*60+m+Number(c.duration||25))/60)
+  }),...weekAvail.map(a=>Math.ceil(((Number((a.end||"00:00").split(":")[0])*60)+Number((a.end||"00:00").split(":")[1]))/60))].filter(Number.isFinite);
+  const startHour=Math.max(0,Math.min(6,starts.length?Math.min(...starts):6));
+  const endHour=Math.min(24,Math.max(23,ends.length?Math.max(...ends):23));
+  const rowPx=96;
 
-  if(typeof openStudentModal==="function"){
-    originals.openStudentModal=openStudentModal;
-    window.openStudentModal=function(id=null){
-      if(!id && blockIfLimit("students")) return;
-      return originals.openStudentModal(id);
-    };
-    openStudentModal=window.openStudentModal;
-  }
-  if(typeof openClassModal==="function"){
-    originals.openClassModal=openClassModal;
-    window.openClassModal=function(){
-      if(blockIfLimit("classes")) return;
-      return originals.openClassModal();
-    };
-    openClassModal=window.openClassModal;
-  }
-  if(typeof openAvailabilityModal==="function"){
-    originals.openAvailabilityModal=openAvailabilityModal;
-    window.openAvailabilityModal=function(){
-      if(blockIfLimit("availability")) return;
-      return originals.openAvailabilityModal();
-    };
-    openAvailabilityModal=window.openAvailabilityModal;
-  }
-  if(typeof openAttendanceModal==="function"){
-    originals.openAttendanceModal=openAttendanceModal;
-    window.openAttendanceModal=function(){
-      if(blockIfLimit("attendance")) return;
-      return originals.openAttendanceModal();
-    };
-    openAttendanceModal=window.openAttendanceModal;
-  }
-  if(typeof openFeedbackModal==="function"){
-    originals.openFeedbackModal=openFeedbackModal;
-    window.openFeedbackModal=function(studentId=null){
-      if(blockIfLimit("feedback")) return;
-      return originals.openFeedbackModal(studentId);
-    };
-    openFeedbackModal=window.openFeedbackModal;
-  }
-  if(typeof openPaymentModal==="function"){
-    originals.openPaymentModal=openPaymentModal;
-    window.openPaymentModal=function(){
-      if(blockIfLimit("payments")) return;
-      return originals.openPaymentModal();
-    };
-    openPaymentModal=window.openPaymentModal;
-  }
-  if(typeof openRecordModal==="function"){
-    originals.openRecordModal=openRecordModal;
-    window.openRecordModal=function(){
-      if(blockIfLimit("records")) return;
-      return originals.openRecordModal();
-    };
-    openRecordModal=window.openRecordModal;
-  }
-
-  /* Recurring classes are disabled in Trial because one action could exceed the 3-class cap. */
-  const originalClassModal = originals.openClassModal;
-  if(originalClassModal){
-    window.openClassModal=function(){
-      if(blockIfLimit("classes")) return;
-      originalClassModal();
-      setTimeout(()=>{
-        const recurring=document.getElementById("fRecurring");
-        const count=document.getElementById("fRepeatCount");
-        if(recurring){
-          recurring.value="none";
-          recurring.disabled=true;
-        }
-        if(count) count.disabled=true;
-      },0);
-    };
-    openClassModal=window.openClassModal;
-  }
-
-  /* Lock premium-only tools. */
-  const lockIds = [
-    "exportBackupBtn","importBackupBtn","exportStudentsBtn","exportPaymentsBtn",
-    "exportFeedbackBtn","exportAttendanceBtn","printFeedbackBtn","saveSettingsBtn"
-  ];
-  lockIds.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){
-      el.disabled=false;
-      el.classList.remove("premium-lock");
-      el.addEventListener("click",function(e){
-        e.preventDefault();e.stopImmediatePropagation();showTrialUpgrade();
-      },true);
-    }
-  });
-
-  /* Lock platform creation in trial, but keep built-in platforms available. */
-  document.addEventListener("click",function(e){
-    const btn=e.target.closest("button");
-    if(!btn)return;
-    const txt=(btn.textContent||"").trim().toLowerCase();
-    if(txt.includes("add platform")){
-      e.preventDefault();e.stopImmediatePropagation();showTrialUpgrade();
-    }
-  },true);
-
-  /* Lock settings form edits. */
-  document.querySelectorAll("#settings input,#settings select,#settings textarea").forEach(el=>{
-    el.addEventListener("focus",()=>showTrialUpgrade(),true);
-  });
-
-  /* Ensure a recurring class save cannot sneak past the class limit. */
-  const oldSaveHandler = document.getElementById("saveModal").onclick;
-  document.getElementById("saveModal").onclick = function(e){
-    const mode = typeof modalMode!=="undefined" ? modalMode : "";
-    const mapping = {
-      "student-add":"students",
-      "class-add":"classes",
-      "availability-add":"availability",
-      "attendance-add":"attendance",
-      "feedback-add":"feedback",
-      "payment-add":"payments",
-      "record-add":"records"
-    };
-    const key=mapping[mode];
-    if(key && atLimit(key)){
-      showTrialUpgrade();
-      return;
-    }
-    oldSaveHandler.call(this,e);
-    localStorage.setItem(TRIAL_KEY,JSON.stringify(data));
-  };
-
-  localStorage.setItem(TRIAL_KEY,JSON.stringify(data));
-  if(typeof renderAll==="function") renderAll();
-
-  const ov=document.getElementById("trialOverlay");
-  if(ov)ov.addEventListener("click",e=>{if(e.target===ov)hideTrialUpgrade()});
-})();
-</script>
-
-
-<script>
-/* Viewable premium sections for Trial */
-(function(){
-  function premiumPrompt(section){
-    const overlay=document.getElementById("trialOverlay");
-    if(overlay){
-      const h=overlay.querySelector("h2");
-      const p=overlay.querySelector("p");
-      if(h) h.textContent=section+" is available in the Full Version 💗";
-      if(p) p.textContent="You can preview this section in the Trial, but using or changing this feature requires ESLFlow Full Version.";
-    }
-    showTrialUpgrade();
-  }
-
-  /* Mark navigation items but DO NOT block navigation. */
-  document.querySelectorAll('.nav-btn[data-page="backup"],.nav-btn[data-page="settings"]').forEach(btn=>{
-    if(!btn.querySelector(".full-only-tag")){
-      const tag=document.createElement("small");
-      tag.className="full-only-tag";
-      tag.textContent="FULL";
-      btn.appendChild(tag);
-    }
-    btn.title="Preview available in Trial • Actions require Full Version";
-  });
-
-  /* Backup & Export: allow page viewing, block every action button inside it. */
-  const backup=document.getElementById("backup");
-  if(backup){
-    backup.querySelectorAll("button").forEach(btn=>{
-      btn.disabled=false;
-      btn.classList.remove("premium-lock");
-      btn.style.pointerEvents="auto";
-      btn.addEventListener("click",function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        premiumPrompt("Backup & Export");
-      },true);
-    });
-    backup.querySelectorAll("input[type=file]").forEach(inp=>{
-      inp.addEventListener("click",function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        premiumPrompt("Backup & Export");
-      },true);
-    });
-  }
-
-  /* Settings: Accent Color is enabled in Trial; all other customization stays locked. */
-  const settings=document.getElementById("settings");
-  if(settings){
-    settings.querySelectorAll("input,select,textarea").forEach(el=>{
-      const originalValue=el.value;
-      const originalChecked=el.checked;
-
-      const block=function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        if("checked" in el) el.checked=originalChecked;
-        el.value=originalValue;
-        premiumPrompt("Settings");
-        try{el.blur()}catch(_){}
-      };
-
-      el.addEventListener("mousedown",block,true);
-      el.addEventListener("keydown",block,true);
-      el.addEventListener("change",block,true);
-    });
-
-    settings.querySelectorAll("button:not(.swatch)").forEach(btn=>{
-      btn.disabled=false;
-      btn.classList.remove("premium-lock");
-      btn.style.pointerEvents="auto";
-      btn.addEventListener("click",function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        premiumPrompt("Settings");
-      },true);
-    });
-
-    /* Keep Accent Color swatches fully interactive in the Trial. */
-    settings.querySelectorAll(".swatch").forEach(btn=>{
-      btn.disabled=false;
-      btn.classList.remove("premium-lock");
-      btn.style.pointerEvents="auto";
-      btn.setAttribute("title","Available in Trial");
-    });
-  }
-
-  /* Ensure generic quick-action Backup Data still navigates to the preview instead of being blocked. */
-  document.querySelectorAll('button[onclick*="navigate(\'backup\')"],button[onclick*=\'navigate("backup")\']').forEach(btn=>{
-    btn.addEventListener("click",function(e){
-      e.stopImmediatePropagation();
-      if(typeof navigate==="function") navigate("backup");
-    },true);
-  });
-})();
-</script>
-
-
-<script>
-/* ESLFlow Trial Schedule hotfix: local dates + accurate 25/50-minute rendering */
-(function(){
-  /* Add Class: common ESL durations and auto-pick the selected student's saved duration. */
-  window.openClassModal=function(){
-    if(typeof data!=="undefined" && Array.isArray(data.classes) && data.classes.length>=3){
-      showTrialUpgrade(); return;
-    }
-    openModal("Add Class",`<div class="form-grid">
-      <div><label>Student</label><select id="fClassStudent">${studentOptions()}</select></div>
-      <div><label>Date</label><input id="fClassDate" type="date" value="${todayISO()}"></div>
-      <div><label>Start Time</label><input id="fClassTime" type="time" value="10:00"></div>
-      <div><label>Duration</label><select id="fClassDuration">${[25,30,40,45,50,60,90,120].map(x=>`<option value="${x}">${x} minutes</option>`).join("")}</select></div>
-      <div><label>Status</label><select id="fClassStatus"><option>Booked</option><option>Completed</option><option>Cancelled</option><option>No Show</option></select></div>
-      <div><label>Lesson / Topic</label><input id="fClassLesson"></div>
-      <div><label>Recurring</label><select id="fRecurring" disabled><option value="none">No — Full Version only</option></select></div>
-      <div><label>Repeat Count</label><input id="fRepeatCount" type="number" value="1" disabled></div>
-      <div class="full"><label>Class Link / Room Note</label><input id="fClassLink"></div>
-    </div>`,"class-add");
-
-    const sel=$("fClassStudent"), dur=$("fClassDuration");
-    function syncDuration(){
-      const s=studentById(sel.value);
-      const mins=Number(s&&s.duration||25);
-      if([...dur.options].some(o=>Number(o.value)===mins)) dur.value=String(mins);
-      else{
-        const opt=document.createElement("option");
-        opt.value=String(mins); opt.textContent=mins+" minutes"; dur.appendChild(opt); dur.value=String(mins);
-      }
-    }
-    sel.addEventListener("change",syncDuration);
-    syncDuration();
-  };
-  openClassModal=window.openClassModal;
-
-  /* Edit Class: keep duration explicit and easy to verify. */
-  window.openClassEditModal=function(id){
-    const c=data.classes.find(x=>x.id===id); if(!c)return;
-    const d=Number(c.duration||25);
-    openModal("Edit Class",`<div class="form-grid">
-      <div><label>Student</label><select id="fClassStudent">${studentOptions(c.studentId)}</select></div>
-      <div><label>Date</label><input id="fClassDate" type="date" value="${esc(c.date)}"></div>
-      <div><label>Start Time</label><input id="fClassTime" type="time" value="${esc(c.time)}"></div>
-      <div><label>Duration</label><select id="fClassDuration">${[25,30,40,45,50,60,90,120].map(x=>`<option value="${x}" ${d===x?"selected":""}>${x} minutes</option>`).join("")}${![25,30,40,45,50,60,90,120].includes(d)?`<option value="${d}" selected>${d} minutes</option>`:""}</select></div>
-      <div><label>Status</label><select id="fClassStatus">${["Booked","Completed","Cancelled","No Show"].map(x=>`<option ${x===c.status?"selected":""}>${x}</option>`).join("")}</select></div>
-      <div><label>Lesson / Topic</label><input id="fClassLesson" value="${esc(c.lesson||"")}"></div>
-      <div class="full"><label>Class Link / Room Note</label><input id="fClassLink" value="${esc(c.link||"")}"></div>
-    </div>`,"class-edit",id);
-  };
-  openClassEditModal=window.openClassEditModal;
-
-  /* Accurate weekly calendar, including early/late ESL classes and 25/50-minute block heights. */
-  window.renderCalendar=function(){
-    const end=addDays(weekStart,6);
-    const weekStartISO=isoDate(weekStart), weekEndISO=isoDate(end);
-    $("weekTitle").textContent=fmtRange(weekStart,end);$("weekGrid").innerHTML="";
-    const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-    $("weekGrid").insertAdjacentHTML("beforeend",`<div class="corner"></div>`);
+  for(let h=startHour;h<endHour;h++){
+    $("weekGrid").insertAdjacentHTML("beforeend",`<div class="time-cell">${String(h).padStart(2,"0")}:00</div>`);
     for(let d=0;d<7;d++){
-      const date=addDays(weekStart,d);
-      $("weekGrid").insertAdjacentHTML("beforeend",`<div class="day-head">${days[d]}, ${date.toLocaleDateString("en-US",{month:"2-digit",day:"2-digit"})}</div>`)
+      const date=isoDate(addDays(weekStart,d));
+      $("weekGrid").insertAdjacentHTML("beforeend",`<div class="slot" id="cell-${date}-${h}"></div>`)
     }
+  }
 
-    const weekClasses=data.classes.filter(c=>c.date>=weekStartISO&&c.date<=weekEndISO);
-    const weekAvail=data.availability.filter(a=>a.date>=weekStartISO&&a.date<=weekEndISO);
+  weekAvail.forEach(a=>{
+    const [hh,mm]=(a.start||"00:00").split(":").map(Number);if(hh<startHour||hh>=endHour)return;
+    const cell=$(`cell-${a.date}-${hh}`);if(!cell)return;
+    const [ehh,emm]=(a.end||a.start||"00:00").split(":").map(Number);
+    let dur=(ehh*60+emm)-(hh*60+mm);if(dur<=0)dur=25;
+    const div=document.createElement("div");div.className=`event ${a.status==="Available"?"available":"blocked"}`;
+    div.style.top=((mm/60)*rowPx+2)+"px";div.style.height=Math.max(28,(dur/60)*rowPx-4)+"px";
+    div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openAvailabilityEditModal('${a.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteAvailability('${a.id}')">×</button></div><strong>${esc(a.status.toUpperCase())}</strong><small>${esc(a.start)}-${esc(a.end)}</small>`;
+    cell.appendChild(div)
+  });
 
-    const starts=[
-      ...weekClasses.map(c=>Number((c.time||"06:00").split(":")[0])),
-      ...weekAvail.map(a=>Number((a.start||"06:00").split(":")[0]))
-    ].filter(Number.isFinite);
+  weekClasses.forEach(c=>{
+    const [hh,mm]=(c.time||"00:00").split(":").map(Number);if(hh<startHour||hh>=endHour)return;
+    const cell=$(`cell-${c.date}-${hh}`);if(!cell)return;
+    const duration=Number(c.duration||25);
+    const total=hh*60+mm+duration, dayOffset=Math.floor(total/1440), endMin=((total%1440)+1440)%1440;
+    const eh=Math.floor(endMin/60),em=endMin%60;
+    const div=document.createElement("div");div.className=`event ${platformClass(c.platform)}`;
+    div.style.top=((mm/60)*rowPx+2)+"px";div.style.height=Math.max(36,(duration/60)*rowPx-4)+"px";
+    const endLabel=`${String(eh).padStart(2,"0")}:${String(em).padStart(2,"0")}${dayOffset?" (+1 day)":""}`;
+    div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openClassEditModal('${c.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteClass('${c.id}')">×</button></div><small>${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} - ${endLabel}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||c.status)} · ${duration} min</small>`;
+    cell.appendChild(div)
+  });
+};
 
-    const ends=[
-      ...weekClasses.map(c=>{
-        const [h,m]=(c.time||"00:00").split(":").map(Number);
-        return Math.ceil((h*60+m+Number(c.duration||25))/60);
-      }),
-      ...weekAvail.map(a=>{
-        const [h,m]=(a.end||"00:00").split(":").map(Number);
-        return Math.ceil((h*60+m)/60);
-      })
-    ].filter(Number.isFinite);
-
-    const startHour=Math.max(0,Math.min(6,starts.length?Math.min(...starts):6));
-    const endHour=Math.min(24,Math.max(23,ends.length?Math.max(...ends):23));
-    const rowPx=96;
-
-    for(let h=startHour;h<endHour;h++){
-      $("weekGrid").insertAdjacentHTML("beforeend",`<div class="time-cell">${String(h).padStart(2,"0")}:00</div>`);
-      for(let d=0;d<7;d++){
-        const date=isoDate(addDays(weekStart,d));
-        $("weekGrid").insertAdjacentHTML("beforeend",`<div class="slot" id="cell-${date}-${h}"></div>`);
+$("importBackupBtn").onclick=()=>{
+  const f=$("importBackupInput").files[0];if(!f)return alert("Choose a JSON backup file first.");
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const imported=JSON.parse(r.result);
+      const required=["students","classes","availability","attendance","feedback","payments","records","settings","platforms"];
+      if(!required.every(k=>k in imported))throw new Error();
+      if(confirm("Replace current dashboard data with this backup? Your current unsaved browser data will be overwritten.")){
+        data=imported;
+        normalizeData();
+        try{if(window.ESLFlowSecure) window.ESLFlowSecure.cache(data)}catch(_){ }
+        renderAll();
+        try{if(window.ESLFlowSecure) window.ESLFlowSecure.queueCloudSave(data,true)}catch(_){ }
+        alert("Backup restored successfully.");
       }
-    }
-
-    weekAvail.forEach(a=>{
-      const [hh,mm]=(a.start||"00:00").split(":").map(Number); if(hh<startHour||hh>=endHour)return;
-      const cell=$(`cell-${a.date}-${hh}`); if(!cell)return;
-      const [ehh,emm]=(a.end||a.start||"00:00").split(":").map(Number);
-      let dur=(ehh*60+emm)-(hh*60+mm); if(dur<=0)dur=25;
-      const div=document.createElement("div"); div.className=`event ${a.status==="Available"?"available":"blocked"}`;
-      div.style.top=((mm/60)*rowPx+2)+"px";
-      div.style.height=Math.max(28,(dur/60)*rowPx-4)+"px";
-      div.innerHTML=`<strong>${esc(a.status.toUpperCase())}</strong><small>${esc(a.start)}-${esc(a.end)}</small>`;
-      cell.appendChild(div);
-    });
-
-    weekClasses.forEach(c=>{
-      const [hh,mm]=(c.time||"00:00").split(":").map(Number); if(hh<startHour||hh>=endHour)return;
-      const cell=$(`cell-${c.date}-${hh}`); if(!cell)return;
-      const duration=Number(c.duration||25);
-      const total=hh*60+mm+duration;
-      const dayOffset=Math.floor(total/1440);
-      const endMin=((total%1440)+1440)%1440;
-      const eh=Math.floor(endMin/60), em=endMin%60;
-
-      const div=document.createElement("div"); div.className=`event ${platformClass(c.platform)}`;
-      div.style.top=((mm/60)*rowPx+2)+"px";
-      div.style.height=Math.max(36,(duration/60)*rowPx-4)+"px";
-      const endLabel=`${String(eh).padStart(2,"0")}:${String(em).padStart(2,"0")}${dayOffset?" (+1 day)":""}`;
-      div.innerHTML=`<small>${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} - ${endLabel}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||c.status)} · ${duration} min</small>`;
-      cell.appendChild(div);
-    });
+    }catch{alert("This does not look like a valid ESLFlow backup file.")}
   };
-  renderCalendar=window.renderCalendar;
+  r.readAsText(f)
+};
 
-  /* Re-render current week with corrected logic immediately. */
-  if(typeof renderCalendar==="function") renderCalendar();
-})();
+normalizeData();
+renderAll();
 </script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="eslflow-secure-auth-js">
+(function(){
+  const SUPABASE_URL="https://gnkuqadmwzatspcbmmpk.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY="sb_publishable_IcRsSNlMLbiyiiNwEkfXkw_KvmKc5EG";
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  let currentUser=null,currentProfile=null,saveTimer=null,deviceId=null;
+  const shell=document.getElementById('authShell'),msg=document.getElementById('loginMsg');
+  const clone=o=>JSON.parse(JSON.stringify(o));
+  const setMsg=(t,type='')=>{msg.textContent=t||'';msg.className='auth-msg '+type};
+  const cacheKey=()=>currentUser?`eslflow_secure_cache_${currentUser.id}`:null;
+  function setCloudStatus(t){
+    const statusEl=document.getElementById('cloudStatus');
+    if(!statusEl)return;
+    statusEl.style.display='block';
+    statusEl.textContent=t;
+  }
+  function cache(d){const k=cacheKey();if(k) localStorage.setItem(k,JSON.stringify(d));}
+  async function cloudSave(d){
+    if(!currentUser)return;
+    setCloudStatus('☁ Saving…');
+    const {error}=await sb.from('dashboard_data').update({data:d,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id);
+    if(error){console.error(error);setCloudStatus('⚠ Save failed');return false}
+    setCloudStatus('☁ Saved securely');return true;
+  }
+  function queueCloudSave(d,immediate=false){
+    cache(d);clearTimeout(saveTimer);
+    if(immediate){cloudSave(clone(d));return}
+    saveTimer=setTimeout(()=>cloudSave(clone(d)),650);
+  }
+  function getOrCreateDeviceId(){
+    let id=localStorage.getItem('eslflow_device_id_v1');
+    if(!id){id=(crypto.randomUUID?crypto.randomUUID():'dev-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem('eslflow_device_id_v1',id)}
+    return id;
+  }
+  function deviceName(){const ua=navigator.userAgent;let b=/Edg\//.test(ua)?'Edge':/Chrome\//.test(ua)?'Chrome':/Firefox\//.test(ua)?'Firefox':/Safari\//.test(ua)?'Safari':'Browser';return `${b} · ${navigator.platform||'Device'}`}
+  async function registerDevice(){
+    deviceId=getOrCreateDeviceId();
+    const {data:existing,error:readErr}=await sb.from('user_devices').select('id').eq('user_id',currentUser.id).eq('device_id',deviceId).maybeSingle();
+    if(readErr) throw readErr;
+    if(existing){await sb.from('user_devices').update({last_seen:new Date().toISOString(),device_name:deviceName()}).eq('id',existing.id);return}
+    const {error}=await sb.from('user_devices').insert({user_id:currentUser.id,device_id:deviceId,device_name:deviceName()});
+    if(error) throw error;
+  }
+  function applyAccountUI(){
+    const e=document.getElementById('accountEmail'),p=document.getElementById('accountPlan');
+    if(e)e.textContent=currentUser?.email||'';if(p)p.textContent=currentProfile?.plan||'';
+    document.body.dataset.plan=currentProfile?.plan||'';
+  }
+  function lockTrialFeatures(){
+    if(currentProfile?.plan!=='trial')return;
+    // Full settings remain visible, but only accent swatches are editable in Trial.
+    const settings=document.getElementById('settings');
+    if(settings){
+      settings.querySelectorAll('input,select,textarea').forEach(el=>{el.disabled=true;el.title='Full Version feature'});
+      const saveBtn=document.getElementById('saveSettings');if(saveBtn){saveBtn.disabled=true;saveBtn.title='Full Version feature'}
+      settings.querySelectorAll('.swatch').forEach(btn=>{btn.disabled=false;btn.title='Available in Trial';btn.onclick=()=>{data.settings.accent=btn.dataset.color;applySettings();save()}});
+    }
+    // Backup/import/export/print are Full-only for Trial accounts.
+    const backup=document.getElementById('backup');
+    if(backup){backup.querySelectorAll('button,input[type=file]').forEach(el=>{el.disabled=true;el.title='Full Version feature'})}
+  }
+  async function loadAccount(){
+    setCloudStatus('☁ Connecting…');
+    const {data:{session}}=await sb.auth.getSession();
+    if(!session){showLogin();return}
+    currentUser=session.user;
+    const {data:profile,error:pErr}=await sb.from('profiles').select('user_id,email,plan,status,max_devices').eq('user_id',currentUser.id).single();
+    if(pErr||!profile){await sb.auth.signOut();showLogin('Account profile could not be loaded.');return}
+    currentProfile=profile;
+    if(profile.status!=='active'){await sb.auth.signOut();showLogin('This ESLFlow account is currently suspended.');return}
+    try{await registerDevice()}catch(e){console.error(e);await sb.auth.signOut();showLogin(e.message&&e.message.includes('Device limit')?'Device limit reached for this ESLFlow license.':'This device could not be registered.');return}
+    const {data:row,error:dErr}=await sb.from('dashboard_data').select('data').eq('user_id',currentUser.id).single();
+    if(dErr){await sb.auth.signOut();showLogin('Your dashboard data could not be loaded.');return}
+    let incoming=row?.data;
+    if(!incoming||typeof incoming!=='object')incoming=clone(DEFAULTS);
+    data=incoming;
+    Object.keys(DEFAULTS).forEach(k=>{if(data[k]===undefined)data[k]=clone(DEFAULTS[k])});
+    if(!data.settings)data.settings=clone(DEFAULTS.settings);
+    normalizeData();cache(data);renderAll();applyAccountUI();lockTrialFeatures();
+    document.body.classList.remove('auth-pending');shell.classList.add('hidden');setCloudStatus('☁ Secure cloud');
+  }
+  function showLogin(errorText=''){
+    currentUser=null;
+    currentProfile=null;
+    document.body.classList.add('auth-pending');
+    shell.classList.remove('hidden');
+    const statusEl=document.getElementById('cloudStatus');
+    if(statusEl)statusEl.style.display='none';
+    setMsg(errorText,errorText?'error':'');
+  }
+  document.getElementById('loginForm').addEventListener('submit',async e=>{
+    e.preventDefault();setMsg('Signing in…');const btn=document.getElementById('loginBtn');btn.disabled=true;
+    const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;
+    const {error}=await sb.auth.signInWithPassword({email,password});
+    btn.disabled=false;
+    if(error){setMsg('Could not sign in. Check your email and password.','error');return}
+    setMsg('');await loadAccount();
+  });
+  document.getElementById('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();showLogin()});
+  sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT')showLogin()});
+  window.ESLFlowSecure={sb,cache,queueCloudSave,get profile(){return currentProfile},get user(){return currentUser}};
+  loadAccount().catch(e=>{console.error(e);showLogin('Could not connect to ESLFlow. Please try again.')});
+})();
+</script>
 
 <script id="eslflow-mobile-reminder-js">
 (function(){
@@ -1851,5 +1912,6 @@ window.resetTrial=resetTrial;
 })();
 </script>
 
+<div class="cloud-status" id="cloudStatus" style="display:none">☁ Secure cloud</div>
 </body>
 </html>
