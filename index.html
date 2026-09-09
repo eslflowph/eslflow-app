@@ -1558,7 +1558,7 @@ renderAll();
     const {data:{session}}=await sb.auth.getSession();
     if(!session){showLogin();return}
     currentUser=session.user;
-    const {data:profile,error:pErr}=await sb.from('profiles').select('user_id,email,plan,status,max_devices,expires_a').eq('user_id',currentUser.id).single();
+    const {data:profile,error:pErr}=await sb.from('profiles').select('user_id,email,plan,status,max_devices,expires_at').eq('user_id',currentUser.id).single();
     if(pErr||!profile){await sb.auth.signOut();showLogin('Account profile could not be loaded.');return}
     if(profile.expires_at && new Date(profile.expires_at).getTime() <= Date.now()){
   await sb.auth.signOut();
