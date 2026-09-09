@@ -1558,8 +1558,13 @@ renderAll();
     const {data:{session}}=await sb.auth.getSession();
     if(!session){showLogin();return}
     currentUser=session.user;
-    const {data:profile,error:pErr}=await sb.from('profiles').select('user_id,email,plan,status,max_devices').eq('user_id',currentUser.id).single();
+    const {data:profile,error:pErr}=await sb.from('profiles').select('user_id,email,plan,status,max_devices,expires_a').eq('user_id',currentUser.id).single();
     if(pErr||!profile){await sb.auth.signOut();showLogin('Account profile could not be loaded.');return}
+    if(profile.expires_at && new Date(profile.expires_at).getTime() <= Date.now()){
+  await sb.auth.signOut();
+  showLogin('Your 1-Year ESLFlow access has expired. Please renew your access to continue.');
+  return;
+}
     currentProfile=profile;
     if(profile.status!=='active'){await sb.auth.signOut();showLogin('This ESLFlow account is currently suspended.');return}
     try{await registerDevice()}catch(e){console.error(e);await sb.auth.signOut();showLogin(e.message&&e.message.includes('Device limit')?'Device limit reached for this ESLFlow license.':'This device could not be registered.');return}
