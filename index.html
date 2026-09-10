@@ -589,6 +589,7 @@ body.auth-pending .app{display:none!important}
           <p class="note">Choose a student and print their feedback history as a simple report.</p>
           <select id="printStudentSelect"></select>
           <button class="btn outline" id="printFeedbackBtn" style="margin-top:10px">Print Student Feedback</button>
+          <button class="btn primary" id="downloadFeedbackPdfBtn" style="margin-top:10px">Download Feedback PDF</button>
         </div>
       </div>
       <div class="card">
@@ -1079,7 +1080,98 @@ $("printFeedbackBtn").onclick=()=>{
     (list.length?list.map(f=>`<div style="margin:20px 0;border-top:1px solid #ccc;padding-top:12px"><h3>${esc(f.date)} · ${esc(f.subject)} · ${esc(f.rating)}</h3><p><b>Strength:</b> ${esc(f.strength)}</p><p><b>Weakness:</b> ${esc(f.weakness)}</p><p><b>Areas to Improve:</b> ${esc(f.improve)}</p><p><b>Teacher Comment:</b> ${esc(f.comment)}</p></div>`).join(""):"<p>No feedback records yet.</p>");
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("print-target"));$("printFeedbackPage").classList.add("print-target");window.print()
 };
+$("downloadFeedbackPdfBtn").onclick=()=>{
+  const sid=$("printStudentSelect").value;
+  const s=studentById(sid);
 
+  if(!s){
+    alert("Choose a student.");
+    return;
+  }
+
+  const list=data.feedback
+    .filter(f=>f.studentId===sid)
+    .sort((a,b)=>b.date.localeCompare(a.date));
+
+  if(!list.length){
+    alert("No feedback records found for this student.");
+    return;
+  }
+
+  const printWindow=window.open("","_blank");
+
+  const feedbackHtml=list.map(f=>`
+    <section style="margin-top:24px;">
+      <div style="font-size:12pt;line-height:1.6;">
+        <p><strong>Date:</strong> ${esc(f.date||"")}</p>
+        <p><strong>Subject:</strong> ${esc(f.subject||"")}</p>
+        <p><strong>Rating:</strong> ${esc(f.rating||"")}</p>
+        <p><strong>Strengths:</strong> ${esc(f.strength||"")}</p>
+        <p><strong>Weaknesses:</strong> ${esc(f.weakness||"")}</p>
+        <p><strong>Areas to Improve:</strong> ${esc(f.improve||"")}</p>
+        <p><strong>Teacher Comment:</strong> ${esc(f.comment||"")}</p>
+      </div>
+    </section>
+  `).join("");
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>ESLFlow Student Feedback</title>
+      <style>
+        @page{
+          size:A4;
+          margin:20mm;
+        }
+        body{
+          font-family:Arial, Helvetica, sans-serif;
+          color:#222;
+          font-size:12pt;
+          line-height:1.6;
+          margin:0;
+        }
+        h1{
+          font-size:18pt;
+          margin-bottom:6px;
+        }
+        .student{
+          font-size:12pt;
+          margin-bottom:20px;
+          padding-bottom:12px;
+          border-bottom:1px solid #ccc;
+        }
+        p{
+          margin:6px 0;
+        }
+        section{
+          page-break-inside:avoid;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>ESLFlow Student Feedback</h1>
+
+      <div class="student">
+        <p><strong>Student Name:</strong> ${esc(s.name||"")}</p>
+        <p><strong>Student ID:</strong> ${esc(s.id||"")}</p>
+        <p><strong>Platform:</strong> ${esc(s.platform||"")}</p>
+      </div>
+
+      ${feedbackHtml}
+
+      <script>
+        window.onload=()=>{
+          setTimeout(()=>window.print(),300);
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+};
 function loadSettingsUI(){
   $("setBrand").value=data.settings.brand;$("setTagline").value=data.settings.tagline;$("setTeacher").value=data.settings.teacher;$("setCurrency").value=data.settings.currency;$("setTimezone").value=data.settings.timezone;$("setTheme").value=data.settings.theme
 }
