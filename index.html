@@ -371,7 +371,7 @@ body.auth-pending .app{display:none!important}
   .eslflow-toast{bottom:18px}
 }
 </style>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="auth-pending">
 
@@ -1098,80 +1098,89 @@ $("downloadFeedbackPdfBtn").onclick=()=>{
     return;
   }
 
-  const printWindow=window.open("","_blank");
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    alert("PDF tool could not load. Please check your internet connection.");
+    return;
+  }
 
-  const feedbackHtml=list.map(f=>`
-    <section style="margin-top:24px;">
-      <div style="font-size:12pt;line-height:1.6;">
-        <p><strong>Date:</strong> ${esc(f.date||"")}</p>
-        <p><strong>Subject:</strong> ${esc(f.subject||"")}</p>
-        <p><strong>Rating:</strong> ${esc(f.rating||"")}</p>
-        <p><strong>Strengths:</strong> ${esc(f.strength||"")}</p>
-        <p><strong>Weaknesses:</strong> ${esc(f.weakness||"")}</p>
-        <p><strong>Areas to Improve:</strong> ${esc(f.improve||"")}</p>
-        <p><strong>Teacher Comment:</strong> ${esc(f.comment||"")}</p>
-      </div>
-    </section>
-  `).join("");
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({
+    orientation:"portrait",
+    unit:"pt",
+    format:"a4"
+  });
 
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>ESLFlow Student Feedback</title>
-      <style>
-        @page{
-          size:A4;
-          margin:20mm;
-        }
-        body{
-          font-family:Arial, Helvetica, sans-serif;
-          color:#222;
-          font-size:12pt;
-          line-height:1.6;
-          margin:0;
-        }
-        h1{
-          font-size:18pt;
-          margin-bottom:6px;
-        }
-        .student{
-          font-size:12pt;
-          margin-bottom:20px;
-          padding-bottom:12px;
-          border-bottom:1px solid #ccc;
-        }
-        p{
-          margin:6px 0;
-        }
-        section{
-          page-break-inside:avoid;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>ESLFlow Student Feedback</h1>
+  const pageWidth=doc.internal.pageSize.getWidth();
+  const pageHeight=doc.internal.pageSize.getHeight();
+  const margin=56;
+  const contentWidth=pageWidth-(margin*2);
+  let y=60;
 
-      <div class="student">
-        <p><strong>Student Name:</strong> ${esc(s.name||"")}</p>
-        <p><strong>Student ID:</strong> ${esc(s.id||"")}</p>
-        <p><strong>Platform:</strong> ${esc(s.platform||"")}</p>
-      </div>
+  function checkPage(space=60){
+    if(y+space>pageHeight-55){
+      doc.addPage();
+      y=60;
+    }
+  }
 
-      ${feedbackHtml}
+  function addField(label,value){
+    const text=String(value||"");
+    const lines=doc.splitTextToSize(text,contentWidth);
 
-      <script>
-        window.onload=()=>{
-          setTimeout(()=>window.print(),300);
-        };
-      <\/script>
-    </body>
-    </html>
-  `);
+    checkPage(30+(lines.length*18));
 
-  printWindow.document.close();
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(12);
+    doc.text(label,margin,y);
+
+    y+=18;
+
+    doc.setFont("helvetica","normal");
+    doc.text(lines,margin,y);
+
+    y+=(lines.length*18)+8;
+  }
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(18);
+  doc.text("ESLFlow Student Feedback",margin,y);
+  y+=34;
+
+  addField("Student Name:",s.name);
+  addField("Student ID:",s.id);
+  addField("Platform:",s.platform);
+
+  doc.setDrawColor(200);
+  doc.line(margin,y,pageWidth-margin,y);
+  y+=25;
+
+  list.forEach((f,index)=>{
+    if(index>0){
+      checkPage(40);
+      doc.setDrawColor(220);
+      doc.line(margin,y,pageWidth-margin,y);
+      y+=25;
+    }
+
+    addField("Date:",f.date);
+    addField("Subject:",f.subject);
+    addField("Rating:",f.rating);
+    addField("Strengths:",f.strength);
+    addField("Weaknesses:",f.weakness);
+    addField("Areas to Improve:",f.improve);
+    addField("Teacher Comment:",f.comment);
+
+    y+=10;
+  });
+
+  const safeName=String(s.name||"Student")
+    .replace(/[\\/:*?"<>|]/g,"")
+    .trim()
+    .replace(/\s+/g,"_");
+
+  doc.save(`ESLFlow_Feedback_${safeName}.pdf`);
 };
+
 function loadSettingsUI(){
   $("setBrand").value=data.settings.brand;$("setTagline").value=data.settings.tagline;$("setTeacher").value=data.settings.teacher;$("setCurrency").value=data.settings.currency;$("setTimezone").value=data.settings.timezone;$("setTheme").value=data.settings.theme
 }
