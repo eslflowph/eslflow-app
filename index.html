@@ -1599,7 +1599,7 @@ const availClass=
     : "blocked";
 div.className=`event ${availClass}`;
     div.style.top=((mm/60)*rowPx+2)+"px";div.style.height=Math.max(28,(dur/60)*rowPx-4)+"px";
-    div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openAvailabilityEditModal('${a.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteAvailability('${a.id}')">×</button></div><strong>${esc(a.status.toUpperCase())}</strong><small>${esc(a.start)}-${esc(a.end)}</small>`;
+    div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openAvailabilityEditModal('${a.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteAvailability('${a.id}')">×</button></div><strong>${esc(availClass.toUpperCase())}</strong><small>${esc(a.start)}-${esc(a.end)}</small>`;
     cell.appendChild(div)
   });
 
