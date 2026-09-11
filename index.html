@@ -1054,14 +1054,22 @@ function renderCalendar(){
     const [hh,mm]=a.start.split(":").map(Number);if(hh<startHour||hh>=endHour)return;
     const cell=$(`cell-${a.date}-${hh}`);if(!cell)return;
     const endm=(+a.end.split(":")[0])*60+(+a.end.split(":")[1]),dur=Math.max(25,endm-(hh*60+mm));
-    const div=document.createElement("div");div.className=`event ${a.status==="Available"?"available":"blocked"}`;div.style.top=((mm/60)*48+3)+"px";div.style.height=Math.max(36,(dur/60)*48-6)+"px";div.textContent=a.status.toUpperCase();cell.appendChild(div)
+    const slotEnd=new Date(`${a.date}T${a.end||"23:59"}:00`);
+const availClass=
+  a.status==="Available"
+    ? (slotEnd.getTime()<Date.now() ? "expired" : "available")
+    : "blocked";
+    const div=document.createElement("div");div.className=`event ${availClass}`;div.style.top=((mm/60)*120+3)+"px";div.style.height=Math.max(36,(dur/60)*120-6)+"px";div.textContent=a.status.toUpperCase();cell.appendChild(div)
   });
   data.classes.forEach(c=>{
     const dt=new Date(c.date+"T00:00:00");if(dt<weekStart||dt>end)return;
     const [hh,mm]=c.time.split(":").map(Number);if(hh<startHour||hh>=endHour)return;
     const cell=$(`cell-${c.date}-${hh}`);if(!cell)return;
     const total=hh*60+mm+Number(c.duration||25),eh=Math.floor(total/60),em=total%60;
-    const div=document.createElement("div");div.className=`event ${platformClass(c.platform)}`;div.style.top=((mm/60)*48+3)+"px";div.style.height=Math.max(38,(Number(c.duration||25)/60)*48-6)+"px";
+    const div=document.createElement("div");const classEnd=new Date(`${c.date}T${c.time||"00:00"}:00`);
+classEnd.setMinutes(classEnd.getMinutes()+Number(c.duration||25));
+const classStatus=classEnd.getTime()<Date.now()?"finished":"booked";
+div.className=`event ${classStatus}`;div.style.top=((mm/60)*120+3)+"px";div.style.height=Math.max(38,(Number(c.duration||25)/60)*120-6)+"px";
     div.innerHTML=`<small>${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} - ${String(eh).padStart(2,"0")}:${String(em).padStart(2,"0")}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||c.status)}</small>`;cell.appendChild(div)
   })
 }
@@ -1570,7 +1578,26 @@ renderCalendar=function(){
     const cell=$(`cell-${a.date}-${hh}`);if(!cell)return;
     const [ehh,emm]=(a.end||a.start||"00:00").split(":").map(Number);
     let dur=(ehh*60+emm)-(hh*60+mm);if(dur<=0)dur=25;
-    const div=document.createElement("div");div.className=`event ${a.status==="Available"?"available":"blocked"}`;
+    const availStart=hh*60+mm;
+const availEnd=availStart+dur;
+
+const hasClassOverlap=weekClasses.some(c=>{
+  if(c.date!==a.date)return false;
+
+  const [ch,cm]=(c.time||"00:00").split(":").map(Number);
+  const classStart=ch*60+cm;
+  const classEnd=classStart+Number(c.duration||25);
+
+  return classStart<availEnd && classEnd>availStart;
+});
+
+if(hasClassOverlap)return;
+    const div=document.createElement("div");const slotEnd=new Date(`${a.date}T${a.end||"23:59"}:00`);
+const availClass=
+  a.status==="Available"
+    ? (slotEnd.getTime()<Date.now() ? "expired" : "available")
+    : "blocked";
+div.className=`event ${availClass}`;
     div.style.top=((mm/60)*rowPx+2)+"px";div.style.height=Math.max(28,(dur/60)*rowPx-4)+"px";
     div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openAvailabilityEditModal('${a.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteAvailability('${a.id}')">×</button></div><strong>${esc(a.status.toUpperCase())}</strong><small>${esc(a.start)}-${esc(a.end)}</small>`;
     cell.appendChild(div)
@@ -1582,7 +1609,11 @@ renderCalendar=function(){
     const duration=Number(c.duration||25);
     const total=hh*60+mm+duration, dayOffset=Math.floor(total/1440), endMin=((total%1440)+1440)%1440;
     const eh=Math.floor(endMin/60),em=endMin%60;
-    const div=document.createElement("div");div.className=`event ${platformClass(c.platform)}`;
+    const div=document.createElement("div");
+const classEnd=new Date(`${c.date}T${c.time||"00:00"}:00`);
+classEnd.setMinutes(classEnd.getMinutes()+duration);
+const classStatus=classEnd.getTime()<Date.now()?"finished":"booked";
+div.className=`event ${classStatus}`;
     div.style.top=((mm/60)*rowPx+2)+"px";div.style.height=Math.max(36,(duration/60)*rowPx-4)+"px";
     const endLabel=`${String(eh).padStart(2,"0")}:${String(em).padStart(2,"0")}${dayOffset?" (+1 day)":""}`;
     div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openClassEditModal('${c.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteClass('${c.id}')">×</button></div><small>${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} - ${endLabel}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||c.status)} · ${duration} min</small>`;
