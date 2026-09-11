@@ -187,20 +187,44 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
   border-radius:8px;padding:8px 12px;text-align:center;font-size:11px
 }
 .week-wrap{overflow:auto;max-height:650px}
-.week-grid{min-width:1050px;display:grid;grid-template-columns:54px repeat(7,minmax(125px,1fr));grid-auto-rows:96px;position:relative}
+.week-grid{min-width:1050px;display:grid;grid-template-columns:54px repeat(7,minmax(125px,1fr));grid-auto-rows:120px;position:relative}
 .corner,.day-head,.time-cell,.slot{border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
 .corner{position:sticky;top:0;left:0;background:var(--surface);z-index:6}
 .day-head{position:sticky;top:0;z-index:5;background:var(--surface);text-align:center;font-weight:800;font-size:12px;padding:12px 6px;color:var(--accent)}
 .time-cell{position:sticky;left:0;z-index:4;background:var(--surface);font-size:11px;color:var(--muted);padding:40px 5px 0;text-align:right}
 .slot{position:relative;background:var(--surface)}.slot:hover{background:var(--surface-2)}
 .event{
-  position:absolute;left:3px;right:3px;top:3px;border-radius:7px;
-  padding:6px 8px;font-size:11px;line-height:1.25;z-index:3;overflow:hidden
+  position:absolute;left:3px;right:3px;top:3px;border-radius:9px;
+  padding:6px 8px;font-size:12px;line-height:1.3;z-index:3;overflow:hidden
 }
 .event strong{display:block}.event small{display:block}
 .pinecone{background:#ffd5e2}.novakid{background:#d5efff}.preply{background:#fff0ba}.cambly{background:#d2f2d8}.direct{background:#eadbff}.other{background:#e9e9e9}
 .available{background:#25b9e9;color:#fff;font-weight:800}
 .blocked{background:#dedede;color:#555;font-weight:800}
+
+.event.available{
+  background:color-mix(in srgb, var(--accent) 22%, white);
+  color:var(--text);
+  font-weight:800;
+}
+
+.event.booked{
+  background:color-mix(in srgb, var(--accent) 72%, black);
+  color:#fff;
+  font-weight:800;
+}
+
+.event.finished{
+  background:var(--accent);
+  color:#fff;
+  font-weight:800;
+}
+
+.event.expired{
+  background:#d9d9d9;
+  color:#555;
+  font-weight:800;
+}
 .calendar-bottom{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border-top:1px solid var(--border)}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px}
 .dot{width:13px;height:13px;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:4px}
@@ -1531,7 +1555,7 @@ renderCalendar=function(){
   }),...weekAvail.map(a=>Math.ceil(((Number((a.end||"00:00").split(":")[0])*60)+Number((a.end||"00:00").split(":")[1]))/60))].filter(Number.isFinite);
   const startHour=Math.max(0,Math.min(6,starts.length?Math.min(...starts):6));
   const endHour=Math.min(24,Math.max(23,ends.length?Math.max(...ends):23));
-  const rowPx=96;
+  const rowPx=120;
 
   for(let h=startHour;h<endHour;h++){
     $("weekGrid").insertAdjacentHTML("beforeend",`<div class="time-cell">${String(h).padStart(2,"0")}:00</div>`);
