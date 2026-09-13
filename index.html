@@ -412,6 +412,19 @@ body.auth-pending .app{display:none!important}
       <button class="auth-primary" type="submit" id="loginBtn">Sign in</button>
       <p class="auth-msg" id="loginMsg"></p>
     </form>
+    <form id="activateForm" style="display:none">
+  <h1>Welcome to ESLFlow</h1>
+  <p>Create your password to activate your Full Version.</p>
+
+  <label for="activatePassword">New Password</label>
+  <input id="activatePassword" type="password" autocomplete="new-password" required placeholder="Create your ESLFlow password">
+
+  <label for="activatePasswordConfirm">Confirm Password</label>
+  <input id="activatePasswordConfirm" type="password" autocomplete="new-password" required placeholder="Confirm your password">
+
+  <button class="auth-primary" type="submit" id="activateBtn">Activate Account</button>
+  <p class="auth-msg" id="activateMsg"></p>
+</form>
     <p style="font-size:11px;margin-top:8px">Accounts are activated by ESLFlow after Trial or Full access is approved.</p>
   </div>
 </div>
@@ -1796,8 +1809,65 @@ renderAll();
     if(error){setMsg('Could not sign in. Check your email and password.','error');return}
     setMsg('');await loadAccount();
   });
+  document.getElementById('activateForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+
+  const password=document.getElementById('activatePassword').value;
+  const confirmPassword=document.getElementById('activatePasswordConfirm').value;
+  const msg=document.getElementById('activateMsg');
+  const btn=document.getElementById('activateBtn');
+
+  if(password.length<6){
+    msg.textContent='Password must be at least 6 characters.';
+    return;
+  }
+
+  if(password!==confirmPassword){
+    msg.textContent='Passwords do not match.';
+    return;
+  }
+
+  btn.disabled=true;
+  msg.textContent='Activating your account...';
+
+  const {error}=await sb.auth.updateUser({password});
+
+  btn.disabled=false;
+
+  if(error){
+    msg.textContent='Could not create your password. Please try again.';
+    return;
+  }
+
+  msg.textContent='Account activated! Opening ESLFlow...';
+
+history.replaceState({},document.title,window.location.pathname);
+
+document.getElementById('activateForm').style.display='none';
+document.getElementById('loginForm').style.display='none';
+
+await loadAccount();
+});
   document.getElementById('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();showLogin()});
-  sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT')showLogin()});
+  sb.auth.onAuthStateChange((event)=>{
+  const url=window.location.href;
+
+  const isActivationLink=
+    url.includes("type=invite") ||
+    url.includes("type=recovery") ||
+    event==="PASSWORD_RECOVERY";
+
+  if(isActivationLink){
+    document.getElementById("loginForm").style.display="none";
+    document.getElementById("activateForm").style.display="block";
+    document.getElementById("authShell").style.display="flex";
+    return;
+  }
+
+  if(event==="SIGNED_OUT"){
+    showLogin();
+  }
+});
   window.ESLFlowSecure={sb,cache,queueCloudSave,get profile(){return currentProfile},get user(){return currentUser}};
   loadAccount().catch(e=>{console.error(e);showLogin('Could not connect to ESLFlow. Please try again.')});
 })();
