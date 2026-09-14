@@ -1793,14 +1793,26 @@ renderAll();
     document.body.classList.remove('auth-pending');shell.classList.add('hidden');setCloudStatus('☁ Secure cloud');
   }
   function showLogin(errorText=''){
-    currentUser=null;
-    currentProfile=null;
-    document.body.classList.add('auth-pending');
-    shell.classList.remove('hidden');
-    const statusEl=document.getElementById('cloudStatus');
-    if(statusEl)statusEl.style.display='none';
-    setMsg(errorText,errorText?'error':'');
-  }
+  currentUser=null;
+  currentProfile=null;
+
+  document.body.classList.add('auth-pending');
+
+  shell.classList.remove('hidden');
+
+  const loginForm=document.getElementById('loginForm');
+  const activateForm=document.getElementById('activateForm');
+  const authShell=document.getElementById('authShell');
+
+  if(loginForm) loginForm.style.display='block';
+  if(activateForm) activateForm.style.display='none';
+  if(authShell) authShell.style.display='flex';
+
+  const statusEl=document.getElementById('cloudStatus');
+  if(statusEl) statusEl.style.display='none';
+
+  setMsg(errorText,errorText?'error':'');
+}
   document.getElementById('loginForm').addEventListener('submit',async e=>{
     e.preventDefault();setMsg('Signing in…');const btn=document.getElementById('loginBtn');btn.disabled=true;
     const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;
