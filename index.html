@@ -1064,7 +1064,7 @@ function renderReports(){
 }
 
 function renderCalendar(){
-  const =$("timezoneSelect")?.value || data.settings.timezone || "Asia/Manila";
+ const viewTZ=$("timezoneSelect")?.value || data.settings.timezone || "Asia/Manila";
   const end=addDays(weekStart,6);$("weekTitle").textContent=fmtRange(weekStart,end);$("weekGrid").innerHTML="";
   const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
   $("weekGrid").insertAdjacentHTML("beforeend",`<div class="corner"></div>`);
