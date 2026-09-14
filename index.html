@@ -1616,8 +1616,8 @@ renderCalendar=function(){
   const ends=[...weekClasses.map(c=>{
     const [h,m]=(c.time||"00:00").split(":").map(Number);return Math.ceil((h*60+m+Number(c.duration||25))/60)
   }),...weekAvail.map(a=>Math.ceil(((Number((a.end||"00:00").split(":")[0])*60)+Number((a.end||"00:00").split(":")[1]))/60))].filter(Number.isFinite);
-  const startHour=Math.max(0,Math.min(6,starts.length?Math.min(...starts):6));
-  const endHour=Math.min(24,Math.max(23,ends.length?Math.max(...ends):23));
+  const startHour=0;
+  const endHour=24;
   const rowPx=120;
 
   for(let h=startHour;h<endHour;h++){
