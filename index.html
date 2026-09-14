@@ -1782,11 +1782,42 @@ renderAll();
     currentProfile=profile;
     if(profile.status!=='active'){await sb.auth.signOut();showLogin('This ESLFlow account is currently suspended.');return}
     try{await registerDevice()}catch(e){console.error(e);await sb.auth.signOut();showLogin(e.message&&e.message.includes('Device limit')?'Device limit reached for this ESLFlow license.':'This device could not be registered.');return}
-    const {data:row,error:dErr}=await sb.from('dashboard_data').select('data').eq('user_id',currentUser.id).single();
-    if(dErr){await sb.auth.signOut();showLogin('Your dashboard data could not be loaded.');return}
-    let incoming=row?.data;
-    if(!incoming||typeof incoming!=='object')incoming=clone(DEFAULTS);
-    data=incoming;
+    const {data:row,error:dErr}=await sb
+  .from('dashboard_data')
+  .select('data')
+  .eq('user_id',currentUser.id)
+  .maybeSingle();
+
+if(dErr){
+  console.error('Dashboard load error:',dErr);
+  await sb.auth.signOut();
+  showLogin('Your dashboard data could not be loaded.');
+  return;
+}
+
+let incoming=row?.data;
+
+if(!incoming || typeof incoming!=='object'){
+  incoming=clone(DEFAULTS);
+
+  const {error:createErr}=await sb
+    .from('dashboard_data')
+    .upsert({
+      user_id:currentUser.id,
+      data:incoming
+    },{
+      onConflict:'user_id'
+    });
+
+  if(createErr){
+    console.error('Dashboard creation error:',createErr);
+    await sb.auth.signOut();
+    showLogin('Your dashboard could not be created.');
+    return;
+  }
+}
+
+data=incoming;
     Object.keys(DEFAULTS).forEach(k=>{if(data[k]===undefined)data[k]=clone(DEFAULTS[k])});
     if(!data.settings)data.settings=clone(DEFAULTS.settings);
     normalizeData();cache(data);renderAll();applyAccountUI();lockTrialFeatures();
