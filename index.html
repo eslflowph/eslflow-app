@@ -797,7 +797,18 @@ function openStudentModal(id=null){
     <div><label>Student ID</label><input id="fId" value="${esc(s.id||next)}"></div>
     <div><label>Platform</label><select id="fPlatform">${platformOptions(s.platform)}</select></div>
     <div><label>Country</label><input id="fCountry" value="${esc(s.country||"")}"></div>
-    <div><label>Timezone</label><select id="fTimezone">${["Asia/Manila","Asia/Tokyo","Asia/Seoul","Asia/Shanghai","Asia/Bangkok","Asia/Singapore","Europe/London","America/New_York","America/Los_Angeles","Australia/Sydney"].map(x=>`<option ${x===s.timezone?"selected":""}>${x}</option>`).join("")}</select></div>
+   <div><label>Timezone</label><select id="fTimezone">${[
+["Asia/Manila","Philippines — Manila"],
+["Asia/Shanghai","China — Shanghai"],
+["Asia/Tokyo","Japan — Tokyo"],
+["Asia/Seoul","South Korea — Seoul"],
+["Asia/Dubai","UAE — Dubai"],
+["Europe/Moscow","Russia — Moscow"],
+["Europe/London","UK — London"],
+["America/New_York","USA — New York"],
+["America/Los_Angeles","USA — Los Angeles"],
+["Australia/Sydney","Australia — Sydney"]
+].map(([tz,label])=>`<option value="${tz}" ${tz===s.timezone?"selected":""}>${label} — ${new Intl.DateTimeFormat("en-US",{timeZone:tz,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date())}</option>`).join("")}</select></div>
     <div><label>English Level</label><select id="fLevel">${["Beginner","Elementary","Pre-Intermediate","Intermediate","Upper-Intermediate","Advanced"].map(x=>`<option ${x===s.level?"selected":""}>${x}</option>`).join("")}</select></div>
     <div><label>Subject / Focus</label><select id="fSubject">${["Conversational English","Speaking","Grammar","Pronunciation","Phonics","Reading","Writing","IELTS","TOEFL","Business English","Kids English","General English","Other"].map(x=>`<option ${x===s.subject?"selected":""}>${x}</option>`).join("")}</select></div>
     <div><label>Class Duration</label><select id="fDuration">${[25,30,40,45,50,60].map(x=>`<option value="${x}" ${Number(s.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}</select></div>
