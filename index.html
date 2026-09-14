@@ -1096,8 +1096,7 @@ const availClass=
 const dt=new Date(converted.date+"T00:00:00");if(dt<weekStart||dt>end)return;
 const [hh,mm]=converted.time.split(":").map(Number);if(hh<startHour||hh>=endHour)return;
 const cell=$(`cell-${converted.date}-${hh}`);if(!cell)return;
-    const cell=$(`cell-${converted.date}-${hh}`);if(!cell)return;
-    const total=hh*60+mm+Number(c.duration||25),eh=Math.floor(total/60),em=total%60;
+     const total=hh*60+mm+Number(c.duration||25),eh=Math.floor(total/60),em=total%60;
     const div=document.createElement("div");const classEnd=new Date(`${c.date}T${c.time||"00:00"}:00`);
 classEnd.setMinutes(classEnd.getMinutes()+Number(c.duration||25));
 const classStatus=classEnd.getTime()<Date.now()?"finished":"booked";
