@@ -811,7 +811,7 @@ function openStudentModal(id=null){
 ].map(([tz,label])=>`<option value="${tz}" ${tz===s.timezone?"selected":""}>${label} — ${new Intl.DateTimeFormat("en-US",{timeZone:tz,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date())}</option>`).join("")}</select></div>
     <div><label>English Level</label><select id="fLevel">${["Beginner","Elementary","Pre-Intermediate","Intermediate","Upper-Intermediate","Advanced"].map(x=>`<option ${x===s.level?"selected":""}>${x}</option>`).join("")}</select></div>
     <div><label>Subject / Focus</label><select id="fSubject">${["Conversational English","Speaking","Grammar","Pronunciation","Phonics","Reading","Writing","IELTS","TOEFL","Business English","Kids English","General English","Other"].map(x=>`<option ${x===s.subject?"selected":""}>${x}</option>`).join("")}</select></div>
-    <div><label>Class Duration</label><select id="fDuration">${[25,30,40,45,50,60].map(x=>`<option value="${x}" ${Number(s.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}</select></div>
+    <div><label>Class Duration</label><select id="fDuration">${Array.from({length:22},(_,i)=>25+i*5).map(x=>`<option value="${x}" ${Number(s.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}</select></div>
     <div><label>Rate per Class</label><input id="fRate" type="number" step=".01" value="${s.rate??100}"></div>
     <div><label>Status</label><select id="fStudentStatus">${["Active","Trial","Paused","Inactive"].map(x=>`<option ${x===(s.status||"Active")?"selected":""}>${x}</option>`).join("")}</select></div>
     <div><label>Start Date</label><input id="fStartDate" type="date" value="${esc(s.startDate||"")}"></div>
@@ -1377,7 +1377,7 @@ function openClassEditModal(id){
     <div><label>Student</label><select id="fClassStudent">${studentOptions(c.studentId)}</select></div>
     <div><label>Date</label><input id="fClassDate" type="date" value="${esc(c.date)}"></div>
     <div><label>Start Time</label><input id="fClassTime" type="time" value="${esc(c.time)}"></div>
-    <div><label>Duration</label><select id="fClassDuration">${[25,30,40,45,50,60,90,120].map(x=>`<option value="${x}" ${Number(c.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}${![25,30,40,45,50,60,90,120].includes(Number(c.duration||25))?`<option value="${Number(c.duration||25)}" selected>${Number(c.duration||25)} minutes</option>`:""}</select></div>
+    <div><label>Duration</label><select id="fClassDuration">${Array.from({length:22},(_,i)=>25+i*5).map(x=>`<option value="${x}" ${Number(c.duration||25)===x?"selected":""}>${x} minutes</option>`).join("")}</select></div>
     <div><label>Status</label><select id="fClassStatus">${["Booked","Completed","Cancelled","No Show"].map(x=>`<option ${x===c.status?"selected":""}>${x}</option>`).join("")}</select></div>
     <div><label>Lesson / Topic</label><input id="fClassLesson" value="${esc(c.lesson||"")}"></div>
     <div class="full"><label>Class Link / Room Note</label><input id="fClassLink" value="${esc(c.link||"")}"></div>
