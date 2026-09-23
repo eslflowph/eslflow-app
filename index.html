@@ -442,6 +442,7 @@ body.auth-pending .app{display:none!important}
     </div>
     <nav>
       <button class="nav-btn active" data-page="dashboard">⌂ <span class="nav-label">Dashboard</span></button>
+      <button class="nav-btn" data-page="notes">📝 <span class="nav-label">Notes</span></button>
       <button class="nav-btn" data-page="students">♟ <span class="nav-label">Students</span></button>
       <button class="nav-btn" data-page="schedule">▣ <span class="nav-label">Schedule</span></button>
       <button class="nav-btn" data-page="attendance">✓ <span class="nav-label">Attendance</span></button>
@@ -457,6 +458,40 @@ body.auth-pending .app{display:none!important}
   </aside>
 
   <main class="main">
+    <section class="page" id="notes">
+  <div class="page-head">
+    <h1>📝 My Notes</h1>
+    <p>Organize your lesson reminders and daily teaching tasks.</p>
+  </div>
+
+  <h2>📌 Sticky Notes</h2>
+  <div>
+  <input id="noteStudent" type="text"
+    placeholder="Student name (optional)">
+
+  <input id="noteTitle" type="text"
+    placeholder="Note title (e.g. Next Lesson)">
+
+  <textarea id="noteContent" rows="5"
+    placeholder="Write your next topic, lesson reminders, or student notes here..."></textarea>
+
+  <button id="addStickyNoteBtn" type="button">+ Add Note</button>
+</div>
+
+<div id="stickyNotesList"></div>
+
+  <h2>✅ To-Do List</h2>
+  <div>
+  <input
+    id="todoInput"
+    type="text"
+    placeholder="Enter a task (e.g. Prepare Anna's next lesson)"
+  >
+  <button id="addTodoBtn" type="button">+ Add Task</button>
+</div>
+
+<div id="todoList"></div>
+</section>
     <section class="page active" id="dashboard">
       <div class="page-head">
         <div><h1 id="welcomeTitle">Teacher Dashboard</h1><p>Manage students, classes, income, feedback, and teaching records in one place.</p></div>
@@ -725,7 +760,9 @@ const DEFAULTS={
   attendance:[],
   feedback:[],
   payments:[],
-  records:[]
+  records:[],
+  stickyNotes:[],
+todos:[]
 };
 
 let data=structuredClone(DEFAULTS);
@@ -1292,9 +1329,187 @@ $("saveSettings").onclick=()=>{
   data.settings.theme=$("setTheme").value;
   save();alert("Settings saved.")
 };
+function renderNotes(){
+  const noteList=$("stickyNotesList");
+  const taskList=$("todoList");
+  if(!noteList || !taskList)return;
 
+  noteList.replaceChildren();
+  taskList.replaceChildren();
+
+  (data.stickyNotes||[]).forEach(note=>{
+    const card=document.createElement("div");
+    card.className="card";
+    const title=document.createElement("h3");
+    title.textContent=note.title||"Untitled Note";
+    const student=document.createElement("p");
+    student.textContent=note.student||"";
+    const content=document.createElement("p");
+    content.textContent=note.content||"";
+    card.append(title,student,content);
+
+const deleteNoteBtn=document.createElement("button");
+deleteNoteBtn.type="button";
+deleteNoteBtn.textContent="🗑 Delete";
+
+deleteNoteBtn.onclick=()=>{
+  if(!confirm("Are you sure you want to delete this note?"))return;
+
+  data.stickyNotes=data.stickyNotes.filter(
+    n=>n.id!==note.id
+  );
+
+  save();
+  renderNotes();
+};
+const editNoteBtn=document.createElement("button");
+editNoteBtn.type="button";
+editNoteBtn.textContent="✏️ Edit";
+
+editNoteBtn.onclick=()=>{
+  const newStudent=prompt("Student name:",note.student||"");
+  if(newStudent===null)return;
+
+  const newTitle=prompt("Note title:",note.title||"");
+  if(newTitle===null)return;
+
+  const newContent=prompt("Edit your note:",note.content||"");
+  if(newContent===null)return;
+
+  if(!newContent.trim()){
+    alert("Your note cannot be empty.");
+    return;
+  }
+
+  note.student=newStudent.trim();
+  note.title=newTitle.trim()||"Untitled Note";
+  note.content=newContent.trim();
+
+  save();
+  renderNotes();
+};
+
+card.appendChild(editNoteBtn);
+card.appendChild(deleteNoteBtn);
+noteList.appendChild(card);
+  });
+
+  (data.todos||[]).forEach(task=>{
+  const item=document.createElement("div");
+  item.className="card";
+
+  const label=document.createElement("label");
+  const checkbox=document.createElement("input");
+  checkbox.type="checkbox";
+  checkbox.checked=!!task.done;
+
+  const text=document.createElement("span");
+  text.textContent=" "+(task.text||"");
+
+  if(task.done){
+    text.style.textDecoration="line-through";
+  }
+
+  checkbox.onchange=()=>{
+    task.done=checkbox.checked;
+    save();
+    renderNotes();
+  };
+
+label.append(checkbox,text);
+item.appendChild(label);
+
+const deleteBtn=document.createElement("button");
+deleteBtn.type="button";
+deleteBtn.textContent="🗑 Delete";
+
+deleteBtn.onclick=()=>{
+  if(!confirm("Are you sure you want to delete this task?"))return;
+
+  data.todos=data.todos.filter(t=>t.id!==task.id);
+  save();
+  renderNotes();
+};
+const editTaskBtn=document.createElement("button");
+editTaskBtn.type="button";
+editTaskBtn.textContent="✏️ Edit";
+
+editTaskBtn.onclick=()=>{
+  const newText=prompt("Edit your task:",task.text||"");
+
+  if(newText===null)return;
+
+  if(!newText.trim()){
+    alert("Your task cannot be empty.");
+    return;
+  }
+
+  task.text=newText.trim();
+
+  save();
+  renderNotes();
+};
+
+item.appendChild(editTaskBtn);
+item.appendChild(deleteBtn);
+taskList.appendChild(item);
+});
+}
+  $("addStickyNoteBtn").onclick=()=>{
+  const student=$("noteStudent").value.trim();
+  const title=$("noteTitle").value.trim();
+  const content=$("noteContent").value.trim();
+
+  if(!content){
+    alert("Please write your note first.");
+    return;
+  }
+
+  if(!Array.isArray(data.stickyNotes)){
+    data.stickyNotes=[];
+  }
+
+  data.stickyNotes.push({
+    id:crypto.randomUUID(),
+    student:student,
+    title:title||"Untitled Note",
+    content:content,
+    createdAt:new Date().toISOString()
+  });
+
+  $("noteStudent").value="";
+  $("noteTitle").value="";
+  $("noteContent").value="";
+
+  save();
+  renderNotes();
+};
+  $("addTodoBtn").onclick=()=>{
+  const text=$("todoInput").value.trim();
+
+  if(!text){
+    alert("Please enter a task first.");
+    return;
+  }
+
+  if(!Array.isArray(data.todos)){
+    data.todos=[];
+  }
+
+  data.todos.push({
+    id:crypto.randomUUID(),
+    text:text,
+    done:false,
+    createdAt:new Date().toISOString()
+  });
+
+  $("todoInput").value="";
+
+  save();
+  renderNotes();
+};
 function renderAll(){
-  applySettings();updateClocks();renderStudentFilters();renderStudents();renderAttendance();renderFeedback();renderPlatforms();fillPaymentMonths();renderPayments();renderRecords();renderDashboard();renderReports();renderCalendar();renderBackupSelectors();loadSettingsUI()
+  applySettings();updateClocks();renderStudentFilters();renderStudents();renderAttendance();renderFeedback();renderPlatforms();fillPaymentMonths();renderPayments();renderRecords();renderDashboard();renderReports();renderCalendar();renderBackupSelectors();loadSettingsUI();renderNotes()
 }
 renderAll();
 </script>
