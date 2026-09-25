@@ -963,13 +963,13 @@ function applySettings(){
   document.documentElement.style.setProperty("--accent",data.settings.accent||"#f65f93");
   $("brandName").textContent=data.settings.brand||"ESLFlow";
   $("brandTagline").textContent=data.settings.tagline||"Teach • Track • Grow";
-  $("welcomeTitle").textContent="Teacher "+String(data.settings.teacher||"Hannah").replace(/^Teacher\s+/i,"").trim();
-  const teacherName=String(data.settings.teacher||"Hannah").replace(/^Teacher\s+/i,"").trim();
+  const teacherName=String(data.settings.teacher||"").replace(/^Teacher(?:\s+|$)/i,"").trim();
+
+$("welcomeTitle").textContent=teacherName ? "Teacher "+teacherName : "Teacher";
 
 if($("dashboardTeacherName")){
-  $("dashboardTeacherName").textContent="Teacher "+teacherName;
+  $("dashboardTeacherName").textContent=teacherName ? "Teacher "+teacherName : "Teacher";
 }
-
 if($("dashboardProfileInitial")){
   $("dashboardProfileInitial").textContent=
     teacherName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"T";
