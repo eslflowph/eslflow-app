@@ -2016,12 +2016,44 @@ const cell=$(`cell-${converted.date}-${hh}`);if(!cell)return;
     const total=hh*60+mm+duration, dayOffset=Math.floor(total/1440), endMin=((total%1440)+1440)%1440;
     const eh=Math.floor(endMin/60),em=endMin%60;
     const div=document.createElement("div");
-const classEnd=new Date(`${c.date}T${c.time||"00:00"}:00`);
-classEnd.setMinutes(classEnd.getMinutes()+duration);
-const classStatus=classEnd.getTime()<Date.now()?"finished":"booked";
+const sourceStart=new Date(`${c.date}T${c.time||"00:00"}:00+08:00`);
+const sourceEnd=new Date(sourceStart.getTime()+duration*60000);
+
+const savedStatus=(c.status||"").trim();
+
+const displayStatus=savedStatus || (
+  sourceEnd.getTime()<Date.now() ? "Completed" : "Booked"
+);
+
+const classStatus=
+  displayStatus==="Completed" ? "finished" :
+  displayStatus==="Booked" ? "booked" :
+  displayStatus==="Cancelled" ? "cancelled" :
+  displayStatus==="No Show" ? "no-show" :
+  displayStatus==="Absent" ? "absent" :
+  "booked";
+
 div.className=`event ${classStatus}`;
-    div.style.top=((mm/60)*rowPx+2)+"px";div.style.height=Math.max(36,(duration/60)*rowPx-4)+"px";
-    const endLabel=`${String(eh).padStart(2,"0")}:${String(em).padStart(2,"0")}${dayOffset?" (+1 day)":""}`;
+
+div.style.top=((mm/60)*rowPx+2)+"px";
+div.style.height=Math.max(36,(duration/60)*rowPx-4)+"px";
+
+const formatClock=(h,m)=>{
+  const suffix=h>=12?"PM":"AM";
+  const h12=h%12||12;
+  return `${h12}:${String(m).padStart(2,"0")} ${suffix}`;
+};
+
+const startLabel=formatClock(hh,mm);
+const endLabel=formatClock(eh,em)+
+  (dayOffset?` (+1 day)`:"");
+
+div.dataset.tooltip=
+  `${c.student||"Student"}\n`+
+  `Status: ${displayStatus}\n`+
+  `Time: ${startLabel} - ${endLabel}\n`+
+  `Platform: ${c.platform||"—"}\n`+
+  `Timezone: ${viewTZ}`;
     div.innerHTML=`<div class="event-tools"><button class="event-tool" title="Edit" onclick="event.stopPropagation();openClassEditModal('${c.id}')">✎</button><button class="event-tool" title="Delete" onclick="event.stopPropagation();deleteClass('${c.id}')">×</button></div><small>${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} - ${endLabel}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||c.status)} · ${duration} min</small>`;
     cell.appendChild(div)
   });
