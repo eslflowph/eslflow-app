@@ -295,7 +295,28 @@ body.auth-pending .app{display:none!important}
 .plan-chip{display:inline-block;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.24);font-weight:900;text-transform:uppercase;letter-spacing:.4px}
 .cloud-status{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);padding:7px 10px;border-radius:999px;font-size:11px;color:var(--muted)}
 @media(max-width:700px){.cloud-status{bottom:72px}.auth-card{padding:22px}}
+.schedule-tooltip{
+  position:fixed;
+  z-index:99999;
+  max-width:280px;
+  padding:10px 12px;
+  border-radius:8px;
+  background:#222;
+  color:#fff;
+  font-size:13px;
+  line-height:1.5;
+  white-space:pre-line;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+  pointer-events:none;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .12s ease;
+}
 
+.schedule-tooltip.show{
+  opacity:1;
+  visibility:visible;
+}
 </style>
 
 <style id="eslflow-mobile-reminder-css">
@@ -1144,12 +1165,69 @@ const availClass=
 const dt=new Date(converted.date+"T00:00:00");if(dt<weekStart||dt>end)return;
 const [hh,mm]=converted.time.split(":").map(Number);if(hh<startHour||hh>=endHour)return;
 const cell=$(`cell-${converted.date}-${hh}`);if(!cell)return;
-     const total=hh*60+mm+Number(c.duration||25),eh=Math.floor(total/60),em=total%60;
-    const div=document.createElement("div");const classEnd=new Date(`${c.date}T${c.time||"00:00"}:00`);
+const duration=Number(c.duration||25);
+
+const sourceStart=new Date(`${c.date}T${c.time||"00:00"}:00+08:00`);
+const sourceEnd=new Date(sourceStart.getTime()+duration*60000);
+
+const endParts=new Intl.DateTimeFormat("en-CA",{
+  timeZone:viewTZ,
+  year:"numeric",
+  month:"2-digit",
+  day:"2-digit",
+  hour:"2-digit",
+  minute:"2-digit",
+  hourCycle:"h23"
+}).formatToParts(sourceEnd);
+
+const endGet=t=>endParts.find(p=>p.type===t)?.value;
+
+const endDate=`${endGet("year")}-${endGet("month")}-${endGet("day")}`;
+const eh=Number(endGet("hour"));
+const em=Number(endGet("minute"));
+
+const dayOffset=Math.round(
+  (Date.parse(endDate+"T00:00:00Z")-
+   Date.parse(converted.date+"T00:00:00Z"))/86400000
+);
+
+const formatClock=(h,m)=>{
+  const suffix=h>=12?"PM":"AM";
+  const h12=h%12||12;
+  return `${h12}:${String(m).padStart(2,"0")} ${suffix}`;
+};
+
+const startLabel=formatClock(hh,mm);
+const endLabel=formatClock(eh,em)+
+  (dayOffset>0?` (+${dayOffset} day${dayOffset>1?"s":""})`:"");
+const div=document.createElement("div");
+
+const classEnd=new Date(`${c.date}T${c.time||"00:00"}:00`);
 classEnd.setMinutes(classEnd.getMinutes()+Number(c.duration||25));
-const classStatus=classEnd.getTime()<Date.now()?"finished":"booked";
-div.className=`event ${classStatus}`;div.style.top=((mm/60)*120+3)+"px";div.style.height=Math.max(38,(Number(c.duration||25)/60)*120-6)+"px";
-    div.innerHTML=`<small>${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")} - ${String(eh).padStart(2,"0")}:${String(em).padStart(2,"0")}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||c.status)}</small>`;cell.appendChild(div)
+
+const savedStatus=(c.status||"").trim();
+
+const displayStatus=savedStatus || (
+  classEnd.getTime()<Date.now() ? "Completed" : "Booked"
+);
+
+const classStatus=
+  displayStatus==="Completed" ? "finished" :
+  displayStatus==="Booked" ? "booked" :
+  displayStatus==="Cancelled" ? "cancelled" :
+  displayStatus==="No Show" ? "no-show" :
+  displayStatus==="Absent" ? "absent" :
+  "booked";
+
+div.className=`event ${classStatus}`;
+  div.innerHTML=`<small>${startLabel} - ${endLabel}</small><strong>${esc(c.student)}</strong><small>${esc(c.platform)} · ${esc(c.lesson||displayStatus)}</small>`;
+div.dataset.tooltip=
+  `${c.student||"Student"}\n`+
+  `Status: ${displayStatus}\n`+
+  `Time: ${startLabel} - ${endLabel}\n`+
+  `Platform: ${c.platform||"—"}\n`+
+  `Timezone: ${viewTZ}`;
+    cell.appendChild(div);  
   })
 }
  function convertScheduleDateTime(date,time,timeZone){
@@ -1508,6 +1586,49 @@ taskList.appendChild(item);
   save();
   renderNotes();
 };
+  const scheduleTooltip=document.createElement("div");
+scheduleTooltip.className="schedule-tooltip";
+document.body.appendChild(scheduleTooltip);
+
+document.addEventListener("mouseover",e=>{
+  const classCard=e.target.closest(".event[data-tooltip]");
+  if(!classCard)return;
+
+  scheduleTooltip.textContent=classCard.dataset.tooltip;
+  scheduleTooltip.classList.add("show");
+});
+
+document.addEventListener("mousemove",e=>{
+  if(!scheduleTooltip.classList.contains("show"))return;
+
+  let x=e.clientX+14;
+  let y=e.clientY+14;
+
+  scheduleTooltip.style.left=`${x}px`;
+  scheduleTooltip.style.top=`${y}px`;
+
+  const box=scheduleTooltip.getBoundingClientRect();
+
+  if(x+box.width>window.innerWidth-8){
+    x=e.clientX-box.width-14;
+  }
+
+  if(y+box.height>window.innerHeight-8){
+    y=e.clientY-box.height-14;
+  }
+
+  scheduleTooltip.style.left=`${Math.max(8,x)}px`;
+  scheduleTooltip.style.top=`${Math.max(8,y)}px`;
+});
+
+document.addEventListener("mouseout",e=>{
+  const classCard=e.target.closest(".event[data-tooltip]");
+  if(!classCard)return;
+
+  if(classCard.contains(e.relatedTarget))return;
+
+  scheduleTooltip.classList.remove("show");
+});
 function renderAll(){
   applySettings();updateClocks();renderStudentFilters();renderStudents();renderAttendance();renderFeedback();renderPlatforms();fillPaymentMonths();renderPayments();renderRecords();renderDashboard();renderReports();renderCalendar();renderBackupSelectors();loadSettingsUI();renderNotes()
 }
