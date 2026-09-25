@@ -87,6 +87,84 @@ button{cursor:pointer}
   gap:16px;margin-bottom:18px
 }
 .page-head h1{margin:0;font-size:30px;color:var(--text)}
+  .dashboard-profile-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.dashboard-profile-photo{
+  width:64px;
+  height:64px;
+  min-width:64px;
+  border-radius:50%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:color-mix(in srgb,var(--accent) 18%,white);
+  border:3px solid color-mix(in srgb,var(--accent) 55%,white);
+  color:var(--accent);
+  font-size:24px;
+  font-weight:900;
+}
+
+.dashboard-profile-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.dashboard-teacher-name{
+  font-size:14px;
+  font-weight:800;
+  color:var(--accent);
+  margin-bottom:2px;
+}
+  .settings-profile-photo{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-top:8px;
+}
+
+.settings-profile-preview{
+  width:72px;
+  height:72px;
+  min-width:72px;
+  border-radius:50%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:color-mix(in srgb,var(--accent) 18%,white);
+  border:3px solid color-mix(in srgb,var(--accent) 55%,white);
+  color:var(--accent);
+  font-size:26px;
+  font-weight:900;
+}
+
+.settings-profile-preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+#setProfilePhoto{
+  max-width:240px;
+  margin-bottom:8px;
+}
+
+#removeProfilePhoto{
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:8px;
+  padding:7px 10px;
+  cursor:pointer;
+}
 .page-head p{margin:5px 0 0;color:var(--muted)}
 .clock{
   min-width:250px;background:var(--surface);border:1px solid var(--accent);
@@ -546,7 +624,18 @@ body.auth-pending .app{display:none!important}
 </section>
     <section class="page active" id="dashboard">
       <div class="page-head">
-        <div><h1 id="welcomeTitle">Teacher Dashboard</h1><p>Manage students, classes, income, feedback, and teaching records in one place.</p></div>
+        <div class="dashboard-profile-head">
+  <div class="dashboard-profile-photo">
+    <img id="dashboardProfilePhoto" alt="Teacher profile photo" hidden>
+    <span id="dashboardProfileInitial">T</span>
+  </div>
+
+  <div>
+    <div class="dashboard-teacher-name" id="dashboardTeacherName">Teacher</div>
+    <h1 id="welcomeTitle">Teacher Dashboard</h1>
+    <p>Manage students, classes, income, feedback, and teaching records in one place.</p>
+  </div>
+</div>
         <div class="clock"></div>
       </div>
       <div class="stats">
@@ -755,6 +844,28 @@ body.auth-pending .app{display:none!important}
             <div class="full"><label>Dashboard Name</label><input id="setBrand"></div>
             <div class="full"><label>Tagline</label><input id="setTagline"></div>
             <div><label>Teacher Name</label><input id="setTeacher"></div>
+            <div class="full">
+  <label>Profile Photo</label>
+
+  <div class="settings-profile-photo">
+    <div class="settings-profile-preview">
+      <img id="settingsProfilePhoto" alt="Profile preview" hidden>
+      <span id="settingsProfileInitial">T</span>
+    </div>
+
+    <div>
+      <input id="setProfilePhoto" type="file" accept="image/*">
+
+      <button id="removeProfilePhoto" type="button">
+        Remove Photo
+      </button>
+
+      <div class="note">
+        Upload JPG, PNG, or WEBP.
+      </div>
+    </div>
+  </div>
+</div>
             <div><label>Currency Symbol</label><input id="setCurrency" maxlength="4"></div>
             <div><label>Default Timezone</label><select id="setTimezone"><option>Asia/Manila</option><option>Asia/Tokyo</option><option>Asia/Seoul</option><option>Asia/Shanghai</option><option>Europe/London</option><option>America/New_York</option></select></div>
             <div><label>Theme</label><select id="setTheme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
@@ -800,6 +911,7 @@ const DEFAULTS={
     brand:"ESLFlow",
     tagline:"Teach • Track • Grow",
     teacher:"Teacher",
+    profilePhoto:"",
     currency:"₱",
     timezone:"Asia/Manila",
     theme:"light",
@@ -851,7 +963,60 @@ function applySettings(){
   document.documentElement.style.setProperty("--accent",data.settings.accent||"#f65f93");
   $("brandName").textContent=data.settings.brand||"ESLFlow";
   $("brandTagline").textContent=data.settings.tagline||"Teach • Track • Grow";
-  $("welcomeTitle").textContent=(data.settings.teacher||"Teacher")+" Dashboard";
+  $("welcomeTitle").textContent="Teacher "+String(data.settings.teacher||"Hannah").replace(/^Teacher\s+/i,"").trim();
+  const teacherName=String(data.settings.teacher||"Hannah").replace(/^Teacher\s+/i,"").trim();
+
+if($("dashboardTeacherName")){
+  $("dashboardTeacherName").textContent="Teacher "+teacherName;
+}
+
+if($("dashboardProfileInitial")){
+  $("dashboardProfileInitial").textContent=
+    teacherName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"T";
+}
+
+const profilePhoto=data.settings.profilePhoto||"";
+
+const dashboardPhoto=$("dashboardProfilePhoto");
+const dashboardInitial=$("dashboardProfileInitial");
+const settingsPhoto=$("settingsProfilePhoto");
+const settingsInitial=$("settingsProfileInitial");
+
+if(profilePhoto){
+  if(dashboardPhoto){
+    dashboardPhoto.src=profilePhoto;
+    dashboardPhoto.hidden=false;
+  }
+  if(dashboardInitial){
+    dashboardInitial.style.display="none";
+  }
+
+  if(settingsPhoto){
+    settingsPhoto.src=profilePhoto;
+    settingsPhoto.hidden=false;
+  }
+  if(settingsInitial){
+    settingsInitial.style.display="none";
+  }
+}else{
+  if(dashboardPhoto){
+    dashboardPhoto.removeAttribute("src");
+    dashboardPhoto.hidden=true;
+  }
+  if(dashboardInitial){
+    dashboardInitial.style.display="";
+  }
+
+  if(settingsPhoto){
+    settingsPhoto.removeAttribute("src");
+    settingsPhoto.hidden=true;
+  }
+  if(settingsInitial){
+    settingsInitial.style.display="";
+    settingsInitial.textContent=
+      teacherName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"T";
+      }
+  }
 }
 function updateClocks(){
   const tz=$("timezoneSelect")?.value || data.settings.timezone || "Asia/Manila",now=new Date();
@@ -1427,6 +1592,38 @@ $("downloadFeedbackPdfBtn").onclick=()=>{
 
 function loadSettingsUI(){
   $("setBrand").value=data.settings.brand;$("setTagline").value=data.settings.tagline;$("setTeacher").value=data.settings.teacher;$("setCurrency").value=data.settings.currency;$("setTimezone").value=data.settings.timezone;$("setTheme").value=data.settings.theme
+  }
+const profilePhotoInput=$("setProfilePhoto");
+const removeProfilePhotoBtn=$("removeProfilePhoto");
+
+if(profilePhotoInput){
+  profilePhotoInput.onchange=()=>{
+    const file=profilePhotoInput.files?.[0];
+    if(!file)return;
+
+    if(!file.type.startsWith("image/")){
+      alert("Please choose an image file.");
+      profilePhotoInput.value="";
+      return;
+    }
+
+    const reader=new FileReader();
+
+    reader.onload=()=>{
+      data.settings.profilePhoto=reader.result;
+      applySettings();
+    };
+
+    reader.readAsDataURL(file);
+  };
+}
+
+if(removeProfilePhotoBtn){
+  removeProfilePhotoBtn.onclick=()=>{
+    data.settings.profilePhoto="";
+    if(profilePhotoInput)profilePhotoInput.value="";
+    applySettings();
+  };
 }
 document.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{data.settings.accent=b.dataset.color;applySettings()});
 $("saveSettings").onclick=()=>{
