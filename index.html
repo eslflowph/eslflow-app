@@ -67,6 +67,95 @@ button{cursor:pointer}
 }
 .brand h2{margin:0;font-size:18px}
 .brand p{margin:4px 0 0;font-size:10px}
+  .sidebar-profile-card{
+  background:rgba(255,255,255,.96);
+  color:var(--text);
+  border-radius:20px;
+  padding:16px 12px;
+  margin-bottom:16px;
+  text-align:center;
+  box-shadow:0 8px 22px rgba(0,0,0,.14);
+}
+
+.sidebar-teacher-name{
+  font-size:17px;
+  line-height:1.25;
+  font-weight:900;
+  color:var(--accent);
+  margin-bottom:6px;
+  word-break:break-word;
+}
+
+.sidebar-role-badge{
+  display:inline-block;
+  padding:4px 9px;
+  margin-bottom:12px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 14%,white);
+  color:color-mix(in srgb,var(--accent) 80%,black);
+  font-size:10px;
+  font-weight:800;
+}
+
+.sidebar-profile-photo{
+  width:105px;
+  height:105px;
+  margin:0 auto 10px;
+  border-radius:18px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:color-mix(in srgb,var(--accent) 14%,white);
+  border:4px solid color-mix(in srgb,var(--accent) 45%,white);
+  box-shadow:0 5px 15px rgba(0,0,0,.10);
+  color:var(--accent);
+  font-size:32px;
+  font-weight:900;
+}
+
+.sidebar-profile-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.sidebar-profile-quote{
+  margin:8px 0 12px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
+  font-style:italic;
+  line-height:1.4;
+}
+
+.sidebar-profile-actions{
+  display:flex;
+  gap:6px;
+  justify-content:center;
+}
+
+.sidebar-profile-actions button{
+  flex:1;
+  border:0;
+  border-radius:8px;
+  padding:7px 5px;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+#sidebarUploadPhotoBtn{
+  background:var(--accent);
+  color:#fff;
+}
+
+#sidebarRemovePhotoBtn{
+  background:color-mix(in srgb,var(--accent) 10%,white);
+  color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 35%,white);
+}
 .sidebar nav{border-top:1px solid rgba(255,255,255,.25);padding-top:10px}
 .nav-btn{
   width:100%;border:0;background:transparent;color:#fff;text-align:left;
@@ -87,6 +176,45 @@ button{cursor:pointer}
   gap:16px;margin-bottom:18px
 }
 .page-head h1{margin:0;font-size:30px;color:var(--text)}
+  .dashboard-welcome-card{
+  flex:1;
+  width:100%;
+  min-height:100px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:20px 24px;
+  border-radius:18px;
+  background:linear-gradient(
+    135deg,
+    var(--accent),
+    color-mix(in srgb,var(--accent) 78%,black)
+  );
+  color:#fff;
+  box-shadow:0 8px 22px rgba(0,0,0,.10);
+  overflow:hidden;
+}
+
+.dashboard-welcome-card h1{
+  margin:0 0 6px;
+  color:#fff;
+  font-size:28px;
+  font-weight:900;
+}
+
+.dashboard-welcome-card p{
+  margin:0;
+  color:rgba(255,255,255,.9);
+}
+
+.dashboard-welcome-heart{
+  font-size:64px;
+  line-height:1;
+  color:#fff;
+  opacity:.20;
+  flex:0 0 auto;
+}
   .dashboard-profile-head{
   display:flex;
   align-items:center;
@@ -464,6 +592,29 @@ td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:top}
 }
 @media(max-width:900px){
   .sidebar{width:78px;padding:10px}.brand p,.brand h2,.nav-label,.sidebar-footer{display:none}
+  .sidebar-profile-card{
+  padding:6px;
+  margin-bottom:8px;
+  background:transparent;
+  box-shadow:none;
+}
+
+.sidebar-teacher-name,
+.sidebar-role-badge,
+.sidebar-profile-quote,
+.sidebar-profile-actions{
+  display:none;
+}
+
+.sidebar-profile-photo{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  margin:0 auto;
+  border-radius:12px;
+  border:2px solid rgba(255,255,255,.75);
+  font-size:18px;
+}
   .brand{padding:8px}.brand-top{justify-content:center}.main{margin-left:78px;width:calc(100% - 78px);padding:18px}
   .grid-2,.grid-3,.setup-grid{grid-template-columns:1fr}.page-head{flex-direction:column}.clock{text-align:left}
   .toolbar{flex-direction:column;align-items:stretch}.filters{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}
@@ -661,15 +812,41 @@ body.auth-pending .app{display:none!important}
 
 <div class="app">
   <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-top">
-        <div class="logo">EF</div>
-        <div>
-          <h2 id="brandName">ESLFlow</h2>
-          <p id="brandTagline">Teach • Track • Grow</p>
-        </div>
-      </div>
-    </div>
+    <div class="sidebar-profile-card">
+
+  <div class="sidebar-teacher-name" id="sidebarTeacherName">
+    Teacher
+  </div>
+
+  <div class="sidebar-role-badge">
+    Online ESL Teacher
+  </div>
+
+  <div class="sidebar-profile-photo">
+    <img id="sidebarProfilePhoto" alt="Teacher profile photo" hidden>
+    <span id="sidebarProfileInitial">T</span>
+  </div>
+
+  <div class="sidebar-profile-quote">
+    “Teach • Track • Grow”
+  </div>
+
+  <div class="sidebar-profile-actions">
+    <button id="sidebarUploadPhotoBtn" type="button">
+      Upload Photo
+    </button>
+
+    <button id="sidebarRemovePhotoBtn" type="button">
+      Remove Photo
+    </button>
+  </div>
+
+</div>
+
+<div class="brand" style="display:none">
+  <h2 id="brandName">ESLFlow</h2>
+  <p id="brandTagline">Teach • Track • Grow</p>
+</div>
     <nav>
       <button class="nav-btn active" data-page="dashboard">⌂ <span class="nav-label">Dashboard</span></button>
       <button class="nav-btn" data-page="notes">📝 <span class="nav-label">Notes</span></button>
@@ -726,28 +903,20 @@ body.auth-pending .app{display:none!important}
       <div class="page-head">
         <section class="page active" id="dashboard">
   <div class="page-head">
-    <div class="dashboard-profile-card">
-      <div class="dashboard-profile-photo-wrap">
-        <div class="dashboard-profile-photo">
-          <img id="dashboardProfilePhoto" alt="Teacher profile photo" hidden>
-          <span id="dashboardProfileInitial">T</span>
-        </div>
+
+    <div class="dashboard-welcome-card">
+      <div>
+        <h1 id="welcomeTitle">Welcome to Teacher</h1>
+        <p>
+          Manage your students, classes, income, feedback, and teaching records in one place.
+        </p>
       </div>
 
-      <div class="dashboard-profile-info">
-        <div class="dashboard-teacher-name" id="dashboardTeacherName">Teacher</div>
-        <div class="dashboard-role-badge">Online ESL Teacher</div>
-        <h1 id="welcomeTitle">Teacher Dashboard</h1>
-        <p class="dashboard-profile-subtext">
-          Manage students, classes, income, feedback, and teaching records in one place.
-        </p>
-        <p class="dashboard-profile-quote">
-          “Teach • Track • Grow”
-        </p>
-      </div>
+      <div class="dashboard-welcome-heart">♥</div>
     </div>
-        <div class="clock"></div>
-      </div>
+
+    <div class="clock"></div>
+  </div>
       <div class="stats">
         <div class="stat"><strong id="statStudents">0</strong><span>Total Students</span></div>
         <div class="stat"><strong id="statUpcoming">0</strong><span>Upcoming Classes</span></div>
@@ -1075,22 +1244,34 @@ function applySettings(){
   $("brandTagline").textContent=data.settings.tagline||"Teach • Track • Grow";
   const teacherName=String(data.settings.teacher||"").replace(/^Teacher(?:\s+|$)/i,"").trim();
 
-$("welcomeTitle").textContent=teacherName ? "Teacher "+teacherName : "Teacher";
+$("welcomeTitle").textContent=
+  teacherName
+    ? "Welcome to Teacher "+teacherName
+    : "Welcome to Teacher";
 
 if($("dashboardTeacherName")){
   $("dashboardTeacherName").textContent=teacherName ? "Teacher "+teacherName : "Teacher";
+}
+  if($("sidebarTeacherName")){
+  $("sidebarTeacherName").textContent=
+    teacherName ? "Teacher "+teacherName : "Teacher";
 }
 if($("dashboardProfileInitial")){
   $("dashboardProfileInitial").textContent=
     teacherName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"T";
 }
-
+if($("sidebarProfileInitial")){
+  $("sidebarProfileInitial").textContent=
+    teacherName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"T";
+}
 const profilePhoto=data.settings.profilePhoto||"";
 
 const dashboardPhoto=$("dashboardProfilePhoto");
 const dashboardInitial=$("dashboardProfileInitial");
 const settingsPhoto=$("settingsProfilePhoto");
 const settingsInitial=$("settingsProfileInitial");
+  const sidebarPhoto=$("sidebarProfilePhoto");
+const sidebarInitial=$("sidebarProfileInitial");
 
 if(profilePhoto){
   if(dashboardPhoto){
@@ -1100,7 +1281,14 @@ if(profilePhoto){
   if(dashboardInitial){
     dashboardInitial.style.display="none";
   }
+if(sidebarPhoto){
+  sidebarPhoto.src=profilePhoto;
+  sidebarPhoto.hidden=false;
+}
 
+if(sidebarInitial){
+  sidebarInitial.style.display="none";
+}
   if(settingsPhoto){
     settingsPhoto.src=profilePhoto;
     settingsPhoto.hidden=false;
@@ -1116,7 +1304,16 @@ if(profilePhoto){
   if(dashboardInitial){
     dashboardInitial.style.display="";
   }
+if(sidebarPhoto){
+  sidebarPhoto.removeAttribute("src");
+  sidebarPhoto.hidden=true;
+}
 
+if(sidebarInitial){
+  sidebarInitial.style.display="";
+  sidebarInitial.textContent=
+    teacherName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"T";
+}
   if(settingsPhoto){
     settingsPhoto.removeAttribute("src");
     settingsPhoto.hidden=true;
@@ -1733,6 +1930,20 @@ if(removeProfilePhotoBtn){
     data.settings.profilePhoto="";
     if(profilePhotoInput)profilePhotoInput.value="";
     applySettings();
+  };
+}
+  const sidebarUploadPhotoBtn=$("sidebarUploadPhotoBtn");
+const sidebarRemovePhotoBtn=$("sidebarRemovePhotoBtn");
+
+if(sidebarUploadPhotoBtn){
+  sidebarUploadPhotoBtn.onclick=()=>{
+    if(profilePhotoInput) profilePhotoInput.click();
+  };
+}
+
+if(sidebarRemovePhotoBtn){
+  sidebarRemovePhotoBtn.onclick=()=>{
+    if(removeProfilePhotoBtn) removeProfilePhotoBtn.click();
   };
 }
 document.querySelectorAll(".swatch").forEach(b=>b.onclick=()=>{data.settings.accent=b.dataset.color;applySettings()});
