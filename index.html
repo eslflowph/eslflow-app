@@ -191,27 +191,27 @@ button{cursor:pointer}
     var(--accent),
     color-mix(in srgb,var(--accent) 78%,black)
   );
-  color:#fff;
+ color:var(--accent-text);
   box-shadow:0 8px 22px rgba(0,0,0,.10);
   overflow:hidden;
 }
 
 .dashboard-welcome-card h1{
   margin:0 0 6px;
-  color:#fff;
+  color:var(--accent-text);
   font-size:28px;
   font-weight:900;
 }
 
 .dashboard-welcome-card p{
   margin:0;
-  color:rgba(255,255,255,.9);
+  color:var(--accent-text-soft);
 }
 
 .dashboard-welcome-heart{
   font-size:64px;
   line-height:1;
-  color:#fff;
+ color:var(--accent-text);
   opacity:.20;
   flex:0 0 auto;
 }
@@ -1236,10 +1236,34 @@ function platformClass(p){p=(p||"").toLowerCase();if(p.includes("pinecone"))retu
 function studentById(id){return data.students.find(s=>s.id===id)}
 function statusBadge(s){const cls=s==="Paid"||s==="Present"||s==="Completed"||s==="Active"?"success":s==="Pending"||s==="Late"||s==="Trial"?"warning":"gray";return `<span class="badge ${cls}">${esc(s)}</span>`}
 function todayISO(){return isoDate(new Date())}
+function getAccentTextColor(hex){
+  const clean=String(hex||"").replace("#","").trim();
+  const full=clean.length===3
+    ? clean.split("").map(x=>x+x).join("")
+    : clean;
 
+  const r=parseInt(full.slice(0,2),16)||0;
+  const g=parseInt(full.slice(2,4),16)||0;
+  const b=parseInt(full.slice(4,6),16)||0;
+
+  const brightness=(r*299+g*587+b*114)/1000;
+
+  return brightness>=170 ? "#1f1f1f" : "#ffffff";
+}
 function applySettings(){
   document.documentElement.dataset.theme=data.settings.theme||"light";
-  document.documentElement.style.setProperty("--accent",data.settings.accent||"#f65f93");
+
+  const accentColor=data.settings.accent||"#f65f93";
+  const accentTextColor=getAccentTextColor(accentColor);
+
+  document.documentElement.style.setProperty("--accent",accentColor);
+  document.documentElement.style.setProperty("--accent-text",accentTextColor);
+  document.documentElement.style.setProperty(
+    "--accent-text-soft",
+    accentTextColor==="#ffffff"
+      ? "rgba(255,255,255,.88)"
+      : "rgba(0,0,0,.70)"
+  );
   $("brandName").textContent=data.settings.brand||"ESLFlow";
   $("brandTagline").textContent=data.settings.tagline||"Teach • Track • Grow";
   const teacherName=String(data.settings.teacher||"").replace(/^Teacher(?:\s+|$)/i,"").trim();
