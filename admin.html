@@ -241,9 +241,35 @@
         Their Trial allows up to 3 records per major section and a maximum of 3 resets.
       </p>
     </div>
-
+    
     <hr style="border:0;border-top:1px solid var(--border);margin:22px 0">
 
+<h3>Transfer Trial → Full</h3>
+
+<p class="small">
+  Use this only after the customer has upgraded and their Full account is active.
+</p>
+
+<label for="migrateTrialToken">Trial Token</label>
+<input
+  id="migrateTrialToken"
+  type="text"
+  placeholder="Paste the customer's Trial token"
+>
+
+<label for="migrateFullUserId">Full User ID</label>
+<input
+  id="migrateFullUserId"
+  type="text"
+  placeholder="Paste the Full account user ID"
+>
+
+<button id="migrateBtn">Transfer Trial Data</button>
+
+<div id="migrateMsg" class="msg"></div>
+
+<hr style="border:0;border-top:1px solid var(--border);margin:22px 0">
+    
     <button id="logoutBtn" class="danger">Log Out</button>
   </div>
 
@@ -258,7 +284,9 @@ const SUPABASE_PUBLISHABLE_KEY =
 
 const ADMIN_FUNCTION_URL =
   "https://gnkuqadmwzatspcbmmpk.supabase.co/functions/v1/eslflow-admin-create-trial";
-
+const MIGRATE_FUNCTION_URL =
+  "https://gnkuqadmwzatspcbmmpk.supabase.co/functions/v1/eslflow-migrate-trial";
+  
 const sb = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY,
@@ -474,7 +502,98 @@ $("openBtn").onclick = () => {
     );
   }
 };
+$("migrateBtn").onclick = async () => {
+  const trialToken = $("migrateTrialToken").value.trim();
+  const fullUserId = $("migrateFullUserId").value.trim();
+  const btn = $("migrateBtn");
+  const msg = $("migrateMsg");
 
+  if(!trialToken || !fullUserId){
+    showMsg(
+      msg,
+      "Please enter both the Trial Token and Full User ID.",
+      "error"
+    );
+    return;
+  }
+
+  const confirmed = confirm(
+    "Transfer this Trial customer's data to the selected Full account?\n\nPlease double-check the Trial Token and Full User ID."
+  );
+
+  if(!confirmed)return;
+
+  btn.disabled = true;
+  btn.textContent = "Transferring...";
+  showMsg(msg,"Transferring Trial data...","success");
+
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+
+    if(!session){
+      throw new Error("Admin session expired. Please log in again.");
+    }
+
+    const res = await fetch(
+      MIGRATE_FUNCTION_URL,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " + session.access_token,
+          "apikey":SUPABASE_PUBLISHABLE_KEY
+        },
+        body:JSON.stringify({
+          trial_token:trialToken,
+          full_user_id:fullUserId
+        })
+      }
+    );
+
+    const result = await res.json();
+
+    if(!res.ok || !result.success){
+      throw new Error(
+        result.error || "Unable to transfer Trial data."
+      );
+    }
+
+    showMsg(
+      msg,
+      "Trial data transferred to Full successfully ✅",
+      "success"
+    );
+
+    $("migrateTrialToken").value = "";
+    $("migrateFullUserId").value = "";
+
+  }catch(err){
+    console.error(err);
+
+    let message =
+      err.message || "Unable to transfer Trial data.";
+
+    if(message.includes("TRIAL_ALREADY_MIGRATED")){
+      message = "This Trial has already been transferred.";
+    }else if(message.includes("TRIAL_NOT_FOUND")){
+      message = "Trial token was not found.";
+    }else if(message.includes("FULL_PROFILE_NOT_FOUND")){
+      message = "Full account was not found.";
+    }else if(message.includes("DESTINATION_NOT_FULL")){
+      message = "The selected account is not a Full account.";
+    }else if(message.includes("DESTINATION_NOT_ACTIVE")){
+      message = "The selected Full account is not active.";
+    }else if(message.includes("FULL_DATA_NOT_EMPTY")){
+      message = "Transfer stopped because the Full account already contains teacher data.";
+    }
+
+    showMsg(msg,message,"error");
+
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Transfer Trial Data";
+  }
+};
 $("logoutBtn").onclick = async () => {
   await sb.auth.signOut();
   location.reload();
