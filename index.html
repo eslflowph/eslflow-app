@@ -451,6 +451,41 @@ button{cursor:pointer}
   gap:8px;
   margin-top:8px;
 }
+  .dashboard-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.dashboard-card-head h3{
+  margin:0;
+}
+
+.dashboard-view-all{
+  border:0;
+  background:transparent;
+  color:var(--accent);
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  padding:4px 6px;
+}
+
+.dashboard-view-all:hover{
+  text-decoration:underline;
+}
+
+.dashboard-row{
+  text-align:left;
+}
+
+.dashboard-row-main,
+.dashboard-row-title,
+.dashboard-row-sub{
+  text-align:left;
+}
 
 .dashboard-row{
   display:flex;
@@ -1050,8 +1085,21 @@ body.auth-pending .app{display:none!important}
         <div class="stat"><strong id="statAttendance">0%</strong><span>Attendance Rate</span></div>
       </div>
       <div class="grid-2">
-        <div class="card"><h3>Upcoming Classes</h3><div id="upcomingList" class="empty">No upcoming classes yet.</div></div>
-        <div class="card"><h3>Recent Feedback</h3><div id="recentFeedback" class="empty">No feedback yet.</div></div>
+        <div class="card">
+  <div class="dashboard-card-head">
+    <h3>Upcoming Classes</h3>
+    <button id="viewAllUpcomingBtn" class="dashboard-view-all" type="button">View All</button>
+  </div>
+  <div id="upcomingList">No upcoming classes yet.</div>
+</div>
+
+<div class="card">
+  <div class="dashboard-card-head">
+    <h3>Recent Feedback</h3>
+    <button id="viewAllFeedbackBtn" class="dashboard-view-all" type="button">View All</button>
+  </div>
+  <div id="recentFeedback">No feedback yet.</div>
+</div>
       </div>
       <div class="card">
         <h3>Quick Actions</h3>
@@ -1340,7 +1388,10 @@ if(!data.settings)data.settings=structuredClone(DEFAULTS.settings);
 
 let modalMode=null,editId=null;
 let weekStart=getMonday(new Date());
-
+  
+let showAllUpcoming=false;
+let showAllFeedback=false;
+  
 const $=id=>document.getElementById(id);
 function save(){
   try{if(window.ESLFlowSecure) window.ESLFlowSecure.cache(data)}catch(_){ }
@@ -1863,12 +1914,16 @@ function renderDashboard(){
 
   /* UPCOMING CLASSES — ROW STYLE */
 
-  const sortedUpcoming=upcoming
-    .slice()
-    .sort((a,b)=>
-      (a.date+a.time).localeCompare(b.date+b.time)
-    )
-    .slice(0,6);
+  const allUpcoming=upcoming
+  .slice()
+  .sort((a,b)=>
+    (a.date+a.time).localeCompare(b.date+b.time)
+  );
+
+const sortedUpcoming=
+  showAllUpcoming
+    ? allUpcoming
+    : allUpcoming.slice(0,3);
 
   $("upcomingList").innerHTML=
     sortedUpcoming.length
@@ -1905,9 +1960,14 @@ function renderDashboard(){
 
   /* RECENT FEEDBACK — ROW STYLE */
 
-  const recentFeedback=data.feedback
-    .slice(-5)
-    .reverse();
+ const allRecentFeedback=data.feedback
+  .slice()
+  .reverse();
+
+const recentFeedback=
+  showAllFeedback
+    ? allRecentFeedback
+    : allRecentFeedback.slice(0,3);
 
   $("recentFeedback").innerHTML=
     recentFeedback.length
@@ -1938,6 +1998,35 @@ function renderDashboard(){
         </div>
       `
       : '<div class="empty">No feedback yet.</div>';
+  const upcomingBtn=$("viewAllUpcomingBtn");
+
+if(upcomingBtn){
+  upcomingBtn.style.display=
+    allUpcoming.length>3 ? "inline-block" : "none";
+
+  upcomingBtn.textContent=
+    showAllUpcoming ? "Show Less" : "View All";
+
+  upcomingBtn.onclick=()=>{
+    showAllUpcoming=!showAllUpcoming;
+    renderDashboard();
+  };
+}
+
+const feedbackBtn=$("viewAllFeedbackBtn");
+
+if(feedbackBtn){
+  feedbackBtn.style.display=
+    allRecentFeedback.length>3 ? "inline-block" : "none";
+
+  feedbackBtn.textContent=
+    showAllFeedback ? "Show Less" : "View All";
+
+  feedbackBtn.onclick=()=>{
+    showAllFeedback=!showAllFeedback;
+    renderDashboard();
+  };
+}
 }
   function renderReports(){
   const totalIncome=data.payments.filter(p=>p.status==="Paid").reduce((a,b)=>a+b.amount,0);
