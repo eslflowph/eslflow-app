@@ -338,6 +338,9 @@ button{cursor:pointer}
 }
 
 @media(max-width:700px){
+  .sidebar-profile-card{
+  display:none!important;
+}
   .dashboard-profile-card{
     flex-direction:column;
     text-align:center;
@@ -1940,9 +1943,10 @@ if(profilePhotoInput){
     const reader=new FileReader();
 
     reader.onload=()=>{
-      data.settings.profilePhoto=reader.result;
-      applySettings();
-    };
+  data.settings.profilePhoto=reader.result;
+  applySettings();
+  save();
+};
 
     reader.readAsDataURL(file);
   };
@@ -1953,6 +1957,7 @@ if(removeProfilePhotoBtn){
     data.settings.profilePhoto="";
     if(profilePhotoInput)profilePhotoInput.value="";
     applySettings();
+    save();
   };
 }
   const sidebarUploadPhotoBtn=$("sidebarUploadPhotoBtn");
