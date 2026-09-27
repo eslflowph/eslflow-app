@@ -475,6 +475,60 @@ button{cursor:pointer}
 
 .dashboard-view-all:hover{
   text-decoration:underline;
+  .dashboard-view-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(0,0,0,.38);
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.dashboard-view-modal.open{
+  display:flex;
+}
+
+.dashboard-view-modal-box{
+  width:min(700px,95vw);
+  max-height:80vh;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:0 18px 50px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+.dashboard-view-modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px;
+  border-bottom:1px solid var(--border);
+}
+
+.dashboard-view-modal-head h3{
+  margin:0;
+}
+
+.dashboard-view-modal-close{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:9px;
+  background:color-mix(in srgb,var(--accent) 12%,white);
+  color:var(--accent);
+  font-size:22px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.dashboard-view-modal-content{
+  padding:16px 18px 18px;
+  max-height:65vh;
+  overflow-y:auto;
 }
 
 .dashboard-row{
@@ -1998,18 +2052,45 @@ const recentFeedback=
         </div>
       `
       : '<div class="empty">No feedback yet.</div>';
-  const upcomingBtn=$("viewAllUpcomingBtn");
+ const upcomingBtn=$("viewAllUpcomingBtn");
 
 if(upcomingBtn){
   upcomingBtn.style.display=
     allUpcoming.length>3 ? "inline-block" : "none";
 
-  upcomingBtn.textContent=
-    showAllUpcoming ? "Show Less" : "View All";
+  upcomingBtn.textContent="View All";
 
   upcomingBtn.onclick=()=>{
-    showAllUpcoming=!showAllUpcoming;
-    renderDashboard();
+    $("dashboardViewModalTitle").textContent="Upcoming Classes";
+
+    $("dashboardViewModalContent").innerHTML=`
+      <div class="dashboard-list">
+        ${allUpcoming.map(c=>`
+          <div class="dashboard-row">
+            <div class="dashboard-row-main">
+              <div class="dashboard-row-title">
+                ${esc(c.student||"Student")}
+              </div>
+
+              <div class="dashboard-row-sub">
+                ${esc(c.platform||"—")} ·
+                ${esc(c.date||"")} ·
+                ${esc(c.time||"")} ·
+                ${Number(c.duration||25)} min
+              </div>
+            </div>
+
+            <div class="dashboard-row-side">
+              <span class="dashboard-pill">
+                ${esc(c.status||"Booked")}
+              </span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    $("dashboardViewModal").classList.add("open");
   };
 }
 
@@ -2019,15 +2100,58 @@ if(feedbackBtn){
   feedbackBtn.style.display=
     allRecentFeedback.length>3 ? "inline-block" : "none";
 
-  feedbackBtn.textContent=
-    showAllFeedback ? "Show Less" : "View All";
+  feedbackBtn.textContent="View All";
 
   feedbackBtn.onclick=()=>{
-    showAllFeedback=!showAllFeedback;
-    renderDashboard();
+    $("dashboardViewModalTitle").textContent="Recent Feedback";
+
+    $("dashboardViewModalContent").innerHTML=`
+      <div class="dashboard-list">
+        ${allRecentFeedback.map(f=>`
+          <div class="dashboard-row">
+            <div class="dashboard-row-main">
+              <div class="dashboard-row-title">
+                ${esc(f.student||"Student")}
+              </div>
+
+              <div class="dashboard-row-sub">
+                ${esc(f.subject||"Feedback")} ·
+                ${esc(f.date||"")}
+              </div>
+            </div>
+
+            <div class="dashboard-row-side">
+              <span class="dashboard-pill">
+                ${esc(f.rating||"Recorded")}
+              </span>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    $("dashboardViewModal").classList.add("open");
   };
 }
+  }
+
+const dashboardViewModal=$("dashboardViewModal");
+const dashboardViewModalClose=$("dashboardViewModalClose");
+
+if(dashboardViewModalClose){
+  dashboardViewModalClose.onclick=()=>{
+    dashboardViewModal.classList.remove("open");
+  };
 }
+
+if(dashboardViewModal){
+  dashboardViewModal.onclick=(e)=>{
+    if(e.target===dashboardViewModal){
+      dashboardViewModal.classList.remove("open");
+    }
+  };
+}
+
   function renderReports(){
   const totalIncome=data.payments.filter(p=>p.status==="Paid").reduce((a,b)=>a+b.amount,0);
   $("reportStudents").textContent=data.students.length;$("reportLessons").textContent=data.records.length;$("reportIncome").textContent=cur(totalIncome);
@@ -3572,5 +3696,19 @@ await loadAccount();
 </script>
 
 <div class="cloud-status" id="cloudStatus" style="display:none">☁ Secure cloud</div>
+
+<div id="dashboardViewModal" class="dashboard-view-modal">
+  <div class="dashboard-view-modal-box">
+
+    <div class="dashboard-view-modal-head">
+      <h3 id="dashboardViewModalTitle">View All</h3>
+      <button id="dashboardViewModalClose" class="dashboard-view-modal-close" type="button">×</button>
+    </div>
+
+    <div id="dashboardViewModalContent" class="dashboard-view-modal-content"></div>
+
+  </div>
+</div>
+
 </body>
 </html>
