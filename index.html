@@ -2137,22 +2137,24 @@ if(feedbackBtn){
 }
   }
 
-const dashboardViewModal=$("dashboardViewModal");
-const dashboardViewModalClose=$("dashboardViewModalClose");
+document.addEventListener("DOMContentLoaded",()=>{
+  const dashboardViewModal=$("dashboardViewModal");
+  const dashboardViewModalClose=$("dashboardViewModalClose");
 
-if(dashboardViewModalClose){
-  dashboardViewModalClose.onclick=()=>{
-    dashboardViewModal.classList.remove("open");
-  };
-}
-
-if(dashboardViewModal){
-  dashboardViewModal.onclick=(e)=>{
-    if(e.target===dashboardViewModal){
+  if(dashboardViewModalClose){
+    dashboardViewModalClose.onclick=()=>{
       dashboardViewModal.classList.remove("open");
-    }
-  };
-}
+    };
+  }
+
+  if(dashboardViewModal){
+    dashboardViewModal.onclick=(e)=>{
+      if(e.target===dashboardViewModal){
+        dashboardViewModal.classList.remove("open");
+      }
+    };
+  }
+});
 
   function renderReports(){
   const totalIncome=data.payments.filter(p=>p.status==="Paid").reduce((a,b)=>a+b.amount,0);
