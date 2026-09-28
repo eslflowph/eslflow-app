@@ -1212,8 +1212,8 @@ body.auth-pending .app{display:none!important}
   <option value="America/Los_Angeles">USA — Los Angeles</option>
   <option value="Australia/Sydney">Australia — Sydney</option>
 </select>
-            <button class="smallbtn" onclick="renderCalendar()">Refresh</button>
-            <button class="smallbtn" id="copySlots">Copy Slots</button>
+            <button class="smallbtn" onclick="openClassModal()">+ Add Class</button>
+<button class="smallbtn" onclick="openAvailabilityModal()">Manage Availability</button>
           </div>
         </div>
         <div class="sleep-note">Tip: You can set available or blocked time slots, then add booked classes on top of your weekly calendar.</div>
@@ -1224,10 +1224,7 @@ body.auth-pending .app{display:none!important}
             <span><i class="dot preply"></i>Preply</span><span><i class="dot cambly"></i>Cambly</span>
             <span><i class="dot direct"></i>Direct</span><span><i class="dot other"></i>Other</span>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" onclick="openClassModal()">+ Add Class</button>
-            <button class="btn outline" onclick="openAvailabilityModal()">Manage Availability</button>
-          </div>
+          
         </div>
       </div>
     </section>
@@ -2297,11 +2294,6 @@ div.dataset.tooltip=
 $("prevWeek").onclick=()=>{weekStart=addDays(weekStart,-7);renderCalendar()};
 $("nextWeek").onclick=()=>{weekStart=addDays(weekStart,7);renderCalendar()};
 $("todayWeek").onclick=()=>{weekStart=getMonday(new Date());renderCalendar()};
-$("copySlots").onclick=async()=>{
-  const end=addDays(weekStart,6);
-  const text=data.availability.filter(a=>{const d=new Date(a.date+"T00:00:00");return d>=weekStart&&d<=end&&a.status==="Available"}).map(a=>`${a.date} ${a.start}-${a.end}`).join("\n")||"No available slots set for this week.";
-  try{await navigator.clipboard.writeText(text);alert("Available slots copied.")}catch{alert(text)}
-};
 
 function renderBackupSelectors(){
   $("printStudentSelect").innerHTML=data.students.length?studentOptions():'<option value="">No students yet</option>'
