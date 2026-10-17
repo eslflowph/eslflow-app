@@ -33,20 +33,50 @@
 }
   
 
-/* Pastel styling for Notes and To-Do cards */
+/* Cute pastel card board for Sticky Notes and To-Do cards */
+#notes #stickyNotesList,
+#notes #todoList {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+  align-items:stretch;
+  margin:12px 0 22px;
+}
 #notes #stickyNotesList .card,
 #notes #todoList .card {
-  background: var(--accent-soft-2);
-  border: 1px solid var(--accent-soft);
-  border-left: 4px solid var(--accent-2);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 12px;
+  background:var(--note-card-bg, var(--accent-soft-2));
+  border:1px solid var(--note-card-border, var(--accent-soft));
+  border-left:4px solid var(--note-card-edge, var(--accent-2));
+  border-radius:15px;
+  padding:14px;
+  margin:0;
+  min-width:0;
+  box-shadow:0 5px 13px rgba(70,45,65,.12);
+  transition:transform .16s ease,box-shadow .16s ease;
 }
-
 #notes #stickyNotesList .card:hover,
 #notes #todoList .card:hover {
-  border-color: var(--accent-2);
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(70,45,65,.16);
+}
+/* Rotate through soft stationery colors like the reference dashboard. */
+#notes #stickyNotesList .card:nth-child(5n+1),
+#notes #todoList .card:nth-child(5n+1) {--note-card-bg:#fff0f5;--note-card-border:#f2bfd2;--note-card-edge:var(--accent);}
+#notes #stickyNotesList .card:nth-child(5n+2),
+#notes #todoList .card:nth-child(5n+2) {--note-card-bg:#e4f8f4;--note-card-border:#a8ded4;--note-card-edge:#66bbae;}
+#notes #stickyNotesList .card:nth-child(5n+3),
+#notes #todoList .card:nth-child(5n+3) {--note-card-bg:#fff5bf;--note-card-border:#f0dc82;--note-card-edge:#d6b94e;}
+#notes #stickyNotesList .card:nth-child(5n+4),
+#notes #todoList .card:nth-child(5n+4) {--note-card-bg:#e5f3ff;--note-card-border:#add5f3;--note-card-edge:#72b7e5;}
+#notes #stickyNotesList .card:nth-child(5n),
+#notes #todoList .card:nth-child(5n) {--note-card-bg:#f0e9ff;--note-card-border:#d1bdf5;--note-card-edge:#a68ade;}
+#notes #stickyNotesList .card h3 {margin-top:0;}
+#notes #todoList .card label {display:flex;align-items:flex-start;gap:7px;}
+#notes #todoList .card label input[type="checkbox"] {width:auto;flex:0 0 auto;margin-top:3px;}
+#notes #stickyNotesList .card button,
+#notes #todoList .card button {margin:8px 6px 0 0;}
+@media(max-width:600px){
+  #notes #stickyNotesList,#notes #todoList {grid-template-columns:1fr;}
 }
 
 #notes input,
@@ -998,6 +1028,22 @@ body.auth-pending .app{display:none!important}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style id="eslflow-lesson-tracker-css">
+.lesson-tracker-card{margin-top:24px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);color:var(--text)}
+.lesson-tracker-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px;border-radius:14px;background:color-mix(in srgb,var(--accent) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 24%,var(--border));margin-bottom:14px}
+.lesson-tracker-head h2{font-size:19px;margin:0;color:var(--text)}.lesson-tracker-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.lesson-tracker-mark{font-size:28px;color:var(--accent)}
+.lesson-tracker-toolbar{display:flex;gap:9px;align-items:center;margin-bottom:12px}.lesson-tracker-toolbar input{flex:1;min-width:150px}.lesson-tracker-toolbar select{max-width:175px}
+.lesson-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}.lesson-table{min-width:850px}.lesson-table th{background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--text);padding:12px}.lesson-table td{background:var(--surface);color:var(--text);padding:12px}.lesson-table tbody tr:hover td{background:color-mix(in srgb,var(--accent) 5%,var(--surface))}
+.lesson-student-name{font-weight:900;color:var(--accent)}.lesson-topic{display:inline-block;padding:7px 10px;border-radius:9px;background:color-mix(in srgb,var(--accent) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 22%,var(--border));font-weight:700}
+.lesson-tracker-foot{font-size:11px;color:var(--muted);margin:12px 2px 0}.lesson-empty{text-align:center;padding:24px!important;color:var(--muted)}
+.lesson-action{border:1px solid var(--border);border-radius:8px;padding:6px 8px;background:var(--surface);color:var(--text);margin:2px}.lesson-action.edit{color:var(--accent);border-color:var(--accent)}.lesson-action.delete{color:var(--danger)}
+.lesson-view-modal{display:none;position:fixed;inset:0;z-index:10010;background:rgba(25,15,22,.55);align-items:center;justify-content:center;padding:16px}.lesson-view-modal.open{display:flex}.lesson-view-card{width:min(1180px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.28)}.lesson-view-scroll{overflow:auto;min-height:0;flex:1}.lesson-view-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.lesson-view-head h2{margin:0;color:var(--accent)}.lesson-view-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.lesson-view-toolbar{display:flex;gap:9px;align-items:center;margin-bottom:12px}.lesson-view-toolbar input{flex:1;min-width:150px}.lesson-view-toolbar select{max-width:175px}.lesson-view-actions{display:flex;justify-content:flex-end;margin-top:12px}.lesson-modal{display:none;position:fixed;inset:0;z-index:10020;background:rgba(25,15,22,.55);align-items:center;justify-content:center;padding:16px}.lesson-modal.open{display:flex}.lesson-modal-card{width:min(620px,100%);max-height:90vh;overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.lesson-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}.lesson-modal-head h2{margin:0;color:var(--accent)}.lesson-modal-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.lesson-close{border:0;border-radius:9px;background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--accent);font-size:24px;width:36px;height:36px}
+.lesson-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.lesson-form-full{grid-column:1/-1}.lesson-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+@media(max-width:700px){.lesson-tracker-toolbar{flex-direction:column;align-items:stretch}.lesson-view-toolbar{flex-direction:column;align-items:stretch}.lesson-view-toolbar select{max-width:none}.lesson-form-grid{grid-template-columns:1fr}.lesson-form-full{grid-column:auto}.lesson-modal-card,.lesson-view-card{padding:15px}.lesson-view-card{max-height:94vh}}
+</style>
+
 </head>
 <body class="auth-pending">
 
@@ -1119,6 +1165,45 @@ body.auth-pending .app{display:none!important}
 </div>
 
 <div id="todoList"></div>
+
+  <section class="lesson-tracker-card" id="lessonTracker">
+    <div class="lesson-tracker-head">
+      <div><h2>♡ Student Lesson Tracker</h2><p>Keep track of every lesson, one student at a time ♡</p></div>
+      <span class="lesson-tracker-mark">✎</span>
+    </div>
+    <div class="lesson-tracker-toolbar">
+      <button type="button" class="btn" id="addLessonBtn">＋ Add Lesson</button>
+      <button type="button" class="btn" id="viewAllLessonsBtn">♡ View All Lessons</button>
+    </div>
+    <div class="lesson-table-wrap"><table class="lesson-table"><thead><tr><th>Student</th><th>Date &amp; Time</th><th>Book</th><th>Unit / Lesson</th><th>Next Topic</th><th>Actions</th></tr></thead><tbody id="lessonRecordsBody"></tbody></table></div>
+    <p class="lesson-tracker-foot">♡ Showing your 3 most recent lessons. Select “View All Lessons” to see and scroll through every record.</p>
+  </section>
+  <div class="lesson-view-modal" id="lessonViewModal" aria-hidden="true">
+    <div class="lesson-view-card" role="dialog" aria-modal="true" aria-labelledby="lessonViewTitle">
+      <div class="lesson-view-head"><div><h2 id="lessonViewTitle">♡ All Student Lessons</h2><p id="lessonViewCount">All of your lesson records in one place.</p></div><button type="button" class="lesson-close" id="closeLessonViewModal" aria-label="Close all lessons">×</button></div>
+      <div class="lesson-view-toolbar">
+        <input id="lessonSearch" type="search" placeholder="Search student or book…" aria-label="Search lesson records">
+        <select id="lessonSort" aria-label="Sort lesson records"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="student">Student A–Z</option></select>
+      </div>
+      <div class="lesson-view-scroll"><div class="lesson-table-wrap"><table class="lesson-table"><thead><tr><th>Student</th><th>Date &amp; Time</th><th>Book</th><th>Unit / Lesson</th><th>Next Topic</th><th>Actions</th></tr></thead><tbody id="allLessonRecordsBody"></tbody></table></div></div>
+      <div class="lesson-view-actions"><button type="button" class="btn" id="doneLessonViewBtn">Done</button></div>
+    </div>
+  </div>
+  <div class="lesson-modal" id="lessonModal" aria-hidden="true">
+    <form class="lesson-modal-card" id="lessonForm">
+      <div class="lesson-modal-head"><div><h2 id="lessonModalTitle">Add Lesson</h2><p>Fill in the details for this lesson.</p></div><button type="button" class="lesson-close" id="closeLessonModal" aria-label="Close">×</button></div>
+      <input type="hidden" id="lessonRecordId">
+      <div class="lesson-form-grid">
+        <div><label for="lessonStudent">Student name</label><input id="lessonStudent" required placeholder="e.g. Lucy"></div>
+        <div><label for="lessonDate">Date</label><input id="lessonDate" type="date" required></div>
+        <div><label for="lessonTime">Time</label><input id="lessonTime" type="time" required></div>
+        <div><label for="lessonBook">Book</label><input id="lessonBook" required placeholder="e.g. Everybody Up 3"></div>
+        <div><label for="lessonUnit">Unit / Lesson</label><input id="lessonUnit" required placeholder="e.g. Unit 5 · Lesson 2"></div>
+        <div class="lesson-form-full"><label for="lessonNextTopic">Next topic</label><input id="lessonNextTopic" required placeholder="e.g. Adjectives · Page 42"></div>
+      </div>
+      <div class="lesson-modal-actions"><button type="button" class="btn outline" id="cancelLessonBtn">Cancel</button><button type="submit" class="btn">Save Lesson</button></div>
+    </form>
+  </div>
 </section>
     
         <section class="page active" id="dashboard">
@@ -1479,6 +1564,7 @@ const DEFAULTS={
   payments:[],
   records:[],
   stickyNotes:[],
+  lessonRecords:[],
 todos:[]
 };
 
@@ -2572,26 +2658,11 @@ editNoteBtn.type="button";
 editNoteBtn.textContent="✏️ Edit";
 
 editNoteBtn.onclick=()=>{
-  const newStudent=prompt("Student name:",note.student||"");
-  if(newStudent===null)return;
-
-  const newTitle=prompt("Note title:",note.title||"");
-  if(newTitle===null)return;
-
-  const newContent=prompt("Edit your note:",note.content||"");
-  if(newContent===null)return;
-
-  if(!newContent.trim()){
-    alert("Your note cannot be empty.");
-    return;
-  }
-
-  note.student=newStudent.trim();
-  note.title=newTitle.trim()||"Untitled Note";
-  note.content=newContent.trim();
-
-  save();
-  renderNotes();
+  openModal("Edit Sticky Note", `<div class="form-grid">
+    <div class="full"><label>Student Name (optional)</label><input id="fNoteStudent" type="text" value="${esc(note.student||"")}" placeholder="Student name"></div>
+    <div class="full"><label>Note Title</label><input id="fNoteTitle" type="text" value="${esc(note.title||"")}" placeholder="e.g. Next Lesson"></div>
+    <div class="full"><label>Note / Lesson Reminder</label><textarea id="fNoteContent" rows="6" placeholder="Write your next topic, lesson reminders, or student notes...">${esc(note.content||"")}</textarea></div>
+  </div>`, "note-edit", note.id);
 };
 
 card.appendChild(editNoteBtn);
@@ -2640,19 +2711,10 @@ editTaskBtn.type="button";
 editTaskBtn.textContent="✏️ Edit";
 
 editTaskBtn.onclick=()=>{
-  const newText=prompt("Edit your task:",task.text||"");
-
-  if(newText===null)return;
-
-  if(!newText.trim()){
-    alert("Your task cannot be empty.");
-    return;
-  }
-
-  task.text=newText.trim();
-
-  save();
-  renderNotes();
+  openModal("Edit To-Do Task", `<div class="form-grid">
+    <div class="full"><label>Task</label><textarea id="fTodoText" rows="4" placeholder="Enter your task...">${esc(task.text||"")}</textarea></div>
+    <div class="full"><label><input id="fTodoDone" type="checkbox" ${task.done?"checked":""} style="width:auto;margin-right:8px"> Mark this task as completed</label></div>
+  </div>`, "todo-edit", task.id);
 };
 
 item.appendChild(editTaskBtn);
@@ -2757,7 +2819,7 @@ document.addEventListener("mouseout",e=>{
   scheduleTooltip.classList.remove("show");
 });
 function renderAll(){
-  applySettings();updateClocks();renderStudentFilters();renderStudents();renderAttendance();renderFeedback();renderPlatforms();fillPaymentMonths();renderPayments();renderRecords();renderDashboard();renderReports();renderCalendar();renderBackupSelectors();loadSettingsUI();renderNotes()
+  applySettings();updateClocks();renderStudentFilters();renderStudents();renderAttendance();renderFeedback();renderPlatforms();fillPaymentMonths();renderPayments();renderRecords();renderDashboard();renderReports();renderCalendar();renderBackupSelectors();loadSettingsUI();renderNotes();if(typeof renderLessonTracker==="function")renderLessonTracker()
 }
 renderAll();
 </script>
@@ -3020,6 +3082,33 @@ $("saveModal").onclick=()=>{
     const s=studentById($("fRecStudent").value);if(!s)return alert("Please choose an existing student.");
     const obj={id:modalMode==="record-edit"?editId:uid("REC"),studentId:s.id,student:s.name,platform:s.platform,date:$("fRecDate").value,lesson:$("fRecLesson").value.trim(),notes:$("fRecNotes").value.trim(),homework:$("fRecHomework").value.trim()};
     updateOrPush("records",obj,modalMode==="record-edit"?editId:null);
+  }
+
+  if(modalMode==="todo-edit"){
+    const task=(data.todos||[]).find(t=>t.id===editId);
+    if(!task){alert("This task could not be found. Please close the popup and try again.");return;}
+    const text=$("fTodoText").value.trim();
+    if(!text){alert("Your task cannot be empty.");return;}
+    task.text=text;
+    task.done=$("fTodoDone").checked;
+    $("modal").classList.remove("open");
+    save();
+    renderNotes();
+    return;
+  }
+
+  if(modalMode==="note-edit"){
+    const note=(data.stickyNotes||[]).find(n=>n.id===editId);
+    if(!note){alert("This note could not be found. Please close the popup and try again.");return;}
+    const content=$("fNoteContent").value.trim();
+    if(!content){alert("Your note cannot be empty.");return;}
+    note.student=$("fNoteStudent").value.trim();
+    note.title=$("fNoteTitle").value.trim()||"Untitled Note";
+    note.content=content;
+    $("modal").classList.remove("open");
+    save();
+    renderNotes();
+    return;
   }
 
   $("modal").classList.remove("open");
@@ -3752,6 +3841,103 @@ await loadAccount();
 
   </div>
 </div>
+
+
+<script id="eslflow-lesson-tracker-js">
+function renderLessonTracker(){
+  const mainBody=document.getElementById("lessonRecordsBody");
+  const allBody=document.getElementById("allLessonRecordsBody");
+  if(!mainBody)return;
+  const q=(document.getElementById("lessonSearch")?.value||"").trim().toLowerCase();
+  const sort=document.getElementById("lessonSort")?.value||"newest";
+  const allRows=Array.isArray(data.lessonRecords)?[...data.lessonRecords]:[];
+  const byNewest=(a,b)=>((b.date||"")+"T"+(b.time||"00:00")).localeCompare((a.date||"")+"T"+(a.time||"00:00"));
+  const recent=[...allRows].sort(byNewest).slice(0,3);
+  const rows=allRows.filter(r=>[r.student,r.book,r.unit,r.nextTopic].some(v=>String(v||"").toLowerCase().includes(q)));
+  rows.sort((a,b)=>{
+    if(sort==="student")return String(a.student||"").localeCompare(String(b.student||""));
+    const av=(a.date||"")+"T"+(a.time||"00:00"),bv=(b.date||"")+"T"+(b.time||"00:00");
+    return sort==="oldest"?av.localeCompare(bv):bv.localeCompare(av);
+  });
+  const drawRows=(body,list,emptyMessage)=>{
+    if(!body)return;
+    body.replaceChildren();
+    if(!list.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.className="lesson-empty";td.textContent=emptyMessage;tr.appendChild(td);body.appendChild(tr);return;}
+    list.forEach(r=>{
+      const tr=document.createElement("tr");
+      const values=[{text:r.student||"",cls:"lesson-student-name"},{text:formatLessonDate(r.date,r.time)},{text:r.book||""},{text:r.unit||""},{text:r.nextTopic||"",cls:"lesson-topic"}];
+      values.forEach(v=>{const td=document.createElement("td"),span=document.createElement("span");span.textContent=v.text;if(v.cls)span.className=v.cls;td.appendChild(span);tr.appendChild(td)});
+      const actions=document.createElement("td");
+      const edit=document.createElement("button");edit.type="button";edit.className="lesson-action edit";edit.textContent="✎ Edit";edit.onclick=()=>{closeLessonView();openLessonEditor(r.id)};
+      const del=document.createElement("button");del.type="button";del.className="lesson-action delete";del.textContent="🗑 Delete";del.onclick=()=>{
+        if(!confirm("Delete this lesson record for "+(r.student||"this student")+"?"))return;
+        data.lessonRecords=data.lessonRecords.filter(x=>x.id!==r.id);save();renderLessonTracker();
+      };
+      actions.append(edit,del);tr.appendChild(actions);body.appendChild(tr);
+    });
+  };
+  drawRows(mainBody,recent,"No lesson records yet — click ＋ Add Lesson to start ♡");
+  drawRows(allBody,rows,q?"No matching lesson records.":"No lesson records yet — click ＋ Add Lesson to start ♡");
+  const count=document.getElementById("lessonViewCount");if(count)count.textContent=`${allRows.length} lesson record${allRows.length===1?"":"s"} · Scroll inside this window to see every record.`;
+}
+function openLessonView(){const modal=document.getElementById("lessonViewModal");modal.classList.add("open");modal.setAttribute("aria-hidden","false");renderLessonTracker();}
+function closeLessonView(){const modal=document.getElementById("lessonViewModal");modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
+
+function formatLessonDate(date,time){
+  if(!date&&!time)return "—";
+  let d=date||"";
+  if(date){const parts=date.split("-");if(parts.length===3)d=new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2])).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});}
+  let t=time||"";
+  if(t){const parts=t.split(":");let h=Number(parts[0]);t=(h%12||12)+":"+parts[1]+" "+(h>=12?"PM":"AM");}
+  return [d,t].filter(Boolean).join(" · ");
+}
+function openLessonEditor(id){
+  const record=(data.lessonRecords||[]).find(r=>r.id===id)||{};
+  const edit=!!id;
+  document.getElementById("lessonModalTitle").textContent=edit?"Edit Lesson":"Add Lesson";
+  document.getElementById("lessonRecordId").value=record.id||"";
+  document.getElementById("lessonStudent").value=record.student||"";
+  document.getElementById("lessonDate").value=record.date||new Date().toISOString().slice(0,10);
+  document.getElementById("lessonTime").value=record.time||"19:00";
+  document.getElementById("lessonBook").value=record.book||"";
+  document.getElementById("lessonUnit").value=record.unit||"";
+  document.getElementById("lessonNextTopic").value=record.nextTopic||"";
+  const modal=document.getElementById("lessonModal");modal.classList.add("open");modal.setAttribute("aria-hidden","false");
+  document.getElementById("lessonStudent").focus();
+}
+function closeLessonEditor(){const modal=document.getElementById("lessonModal");modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
+document.getElementById("addLessonBtn")?.addEventListener("click",()=>openLessonEditor(null));
+document.getElementById("viewAllLessonsBtn")?.addEventListener("click",openLessonView);
+document.getElementById("closeLessonViewModal")?.addEventListener("click",closeLessonView);
+document.getElementById("doneLessonViewBtn")?.addEventListener("click",closeLessonView);
+document.getElementById("lessonViewModal")?.addEventListener("click",e=>{if(e.target.id==="lessonViewModal")closeLessonView()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLessonView()});
+document.getElementById("closeLessonModal")?.addEventListener("click",closeLessonEditor);
+document.getElementById("cancelLessonBtn")?.addEventListener("click",closeLessonEditor);
+document.getElementById("lessonModal")?.addEventListener("click",e=>{if(e.target.id==="lessonModal")closeLessonEditor()});
+document.getElementById("lessonSearch")?.addEventListener("input",renderLessonTracker);
+document.getElementById("lessonSort")?.addEventListener("change",renderLessonTracker);
+document.getElementById("lessonForm")?.addEventListener("submit",e=>{
+  e.preventDefault();
+  const id=document.getElementById("lessonRecordId").value;
+  const record={
+    id:id||uid("LESSON"),
+    student:document.getElementById("lessonStudent").value.trim(),
+    date:document.getElementById("lessonDate").value,
+    time:document.getElementById("lessonTime").value,
+    book:document.getElementById("lessonBook").value.trim(),
+    unit:document.getElementById("lessonUnit").value.trim(),
+    nextTopic:document.getElementById("lessonNextTopic").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+  if(!record.student||!record.date||!record.time||!record.book||!record.unit||!record.nextTopic)return;
+  if(!Array.isArray(data.lessonRecords))data.lessonRecords=[];
+  const index=data.lessonRecords.findIndex(r=>r.id===id);
+  if(index>=0)data.lessonRecords[index]=record;else data.lessonRecords.push(record);
+  closeLessonEditor();save();renderLessonTracker();
+});
+renderLessonTracker();
+</script>
 
 </body>
 </html>
